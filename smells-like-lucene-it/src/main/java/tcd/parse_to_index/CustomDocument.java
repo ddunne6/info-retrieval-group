@@ -1,9 +1,11 @@
 package tcd.parse_to_index;
 
+import static tcd.constants.SGMLTags.*;
+
 public class CustomDocument {
 	private String docno;
-	private String docid;
 	private String profile;
+	private String date;
 	private String headline;
 	private String text;
 	private String pub;
@@ -14,12 +16,6 @@ public class CustomDocument {
 	}
 	public void setDocno(String docno) {
 		this.docno = docno;
-	}
-	public String getDocid() {
-		return docid;
-	}
-	public void setDocid(String docid) {
-		this.docid = docid;
 	}
 	public String getProfile() {
 		return profile;
@@ -51,5 +47,29 @@ public class CustomDocument {
 	public void setPub(String pub) {
 		this.pub = pub;
 	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	
+	public void addTaggedContent(String tag, String tagContent) {
+		switch (tag) {
+			case DOCNO:		setDocno(tagContent);
+							break;
+			case PROFILE:	setProfile(tagContent);
+							break;
+			case DATE:		setDate(tagContent);
+							break;
+			case HEADLINE:	setHeadline(tagContent);
+							break;
+			case TEXT:		setText(tagContent);
+							break;
+			case PUB:		setPub(tagContent);
+							break;
+			case PAGE:		setPage(tagContent);
+							break;
+		}
+	}
 }
