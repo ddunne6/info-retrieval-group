@@ -3,6 +3,7 @@ import static tcd.constants.FilePathPatterns.*;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class App 
 {
@@ -10,13 +11,9 @@ public class App
     {
         System.out.println( "Hello World!" );
         // Parse Each Document for Financial Times
-        for (String pattern : FT_PATTERNS) {
-        	System.out.println("First file >>> " + getFinancialTimesFile(pattern, 1));
-        	int index = 1;
-        	while(Files.exists(Paths.get(getFinancialTimesFile(pattern, index)))) {
-        		System.out.println(getFinancialTimesFile(pattern, index));
-        		index++;
-        	}
+        List<String> financialTimesFiles = getFinancialTimesFiles();
+        for(String fileName: financialTimesFiles) {
+        	System.out.println(fileName);
         }
     }
 }

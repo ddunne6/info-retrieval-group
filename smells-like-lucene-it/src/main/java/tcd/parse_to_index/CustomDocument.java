@@ -3,7 +3,11 @@ package tcd.parse_to_index;
 public class CustomDocument {
 	private String docno;
 	private String docid;
-	private String p;
+	private String profile;
+	private String headline;
+	private String text;
+	private String pub;
+	private String page;
 	
 	public String getDocno() {
 		return docno;
@@ -17,11 +21,35 @@ public class CustomDocument {
 	public void setDocid(String docid) {
 		this.docid = docid;
 	}
-	public String getP() {
-		return p;
+	public String getProfile() {
+		return profile;
 	}
-	public void setP(String p) {
-		this.p = p;
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+	public String getHeadline() {
+		return headline;
+	}
+	public void setHeadline(String headline) {
+		this.headline = headline;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	public String getPage() {
+		return page;
+	}
+	public void setPage(String page) {
+		this.page = page;
+	}
+	public String getPub() {
+		return pub;
+	}
+	public void setPub(String pub) {
+		this.pub = pub;
 	}
 	
 }
