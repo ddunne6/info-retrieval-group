@@ -1,9 +1,13 @@
 package tcd.parse_to_index;
 
+import static tcd.constants.SGMLTags.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class CustomDocument {
 	private String docno;
-	private String docid;
-	private String p;
+	private List<CustomTag> otherInfo = new ArrayList<CustomTag>(); // All other tags and content apart from <DOCNO>
 	
 	public String getDocno() {
 		return docno;
@@ -11,17 +15,21 @@ public class CustomDocument {
 	public void setDocno(String docno) {
 		this.docno = docno;
 	}
-	public String getDocid() {
-		return docid;
-	}
-	public void setDocid(String docid) {
-		this.docid = docid;
-	}
-	public String getP() {
-		return p;
-	}
-	public void setP(String p) {
-		this.p = p;
+	
+	public List<CustomTag> getOtherInfo() {
+		return otherInfo;
 	}
 	
+	public void addTaggedContent(String tag, String tagContent) {
+		switch (tag) {
+			case DOCNO:		setDocno(tagContent);
+							break;
+			default:		addOtherInfo(tag, tagContent);
+							break;
+		}
+	}
+	
+	private void addOtherInfo(String tag, String tagContent) {
+		otherInfo.add(new CustomTag(tag, tagContent));
+	}
 }
