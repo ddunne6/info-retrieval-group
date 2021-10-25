@@ -2,23 +2,22 @@ package tcd.smells_like_lucene_it;
 import static tcd.constants.FilePathPatterns.*;
 import tcd.parse_to_index.*;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class App 
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
-        // Parse Each Document for Financial Times
+        // Get Each File for Financial Times
         List<String> financialTimesFiles = getFinancialTimesFiles();
-        // Prints list of file names and paths for Financial Times
+
+        // Parse each file
         for(String fileName: financialTimesFiles) {
-        	System.out.println(fileName);
+        	DocumentParserSGML documentParser = new DocumentParserSGML();
+            List<CustomDocument> documents = documentParser.parse(fileName);
+            // TODO index the documents
         }
-        // Parse first document
-        DocumentParser documentParser = new DocumentParser();
-        documentParser.parse(financialTimesFiles.get(0));
+        System.out.println("Parsing and Indexing COMPLETE");
+
     }
 }
