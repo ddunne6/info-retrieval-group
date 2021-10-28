@@ -43,13 +43,20 @@ public class DocumentParserSGML {
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
-
+		
+		Path path = Paths.get(fileAsXML);
+		try {
+			Files.deleteIfExists(path);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		System.out.println("FINISHED Parsing file >>> " + filePath);
 		return documents;
 	}
 
 	private String decorateFileToXML(String filePath) {
-		String tempFile = "temp-sgml-to-xml/temp.xml";
+		
+		String tempFile = "temp-sgml-to-xml"+ filePath.substring(2) + ".xml";
 		Path path = Paths.get(tempFile);
 		try {
 			Files.deleteIfExists(path);
