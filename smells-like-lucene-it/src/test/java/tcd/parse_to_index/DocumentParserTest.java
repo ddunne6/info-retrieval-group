@@ -17,8 +17,8 @@ public class DocumentParserTest {
 	@Before
 	public void setUp() {
 		documentParser = new DocumentParserSGML();
-		ft911docs = documentParser.parse(getFinancialTimesFile(FT_911_PATTERN, 1));
-		ft934docs = documentParser.parse(getFinancialTimesFile(FT_934_PATTERN, 7));
+		ft911docs = documentParser.parseFT(getFinancialTimesFile(FT_911_PATTERN, 1));
+		ft934docs = documentParser.parseFT(getFinancialTimesFile(FT_934_PATTERN, 7));
 		expectedDoc = new CustomDocument();
 	}
 
@@ -58,27 +58,6 @@ public class DocumentParserTest {
 		System.out.println("Test Complete >>> financialTimes_ft943_7_FirstDocTest()");
 	}
 
-	private void initExpectedDocft934(String docno, String profile, String date, String headline, String byline,
-			String text, String xx1, String co, String xx2, String cn, String xx3, String in, String xx4, String tp,
-			String pub, String page) {
-		expectedDoc.setDocno(docno);
-		expectedDoc.addTaggedContent("PROFILE", profile);
-		expectedDoc.addTaggedContent("DATE", date);
-		expectedDoc.addTaggedContent("HEADLINE", headline);
-		expectedDoc.addTaggedContent("BYLINE", byline);
-		expectedDoc.addTaggedContent("TEXT", text);
-		expectedDoc.addTaggedContent("XX", xx1);
-		expectedDoc.addTaggedContent("CO", co);
-		expectedDoc.addTaggedContent("XX", xx2);
-		expectedDoc.addTaggedContent("CN", cn);
-		expectedDoc.addTaggedContent("XX", xx3);
-		expectedDoc.addTaggedContent("IN", in);
-		expectedDoc.addTaggedContent("XX", xx4);
-		expectedDoc.addTaggedContent("TP", tp);
-		expectedDoc.addTaggedContent("PUB", pub);
-		expectedDoc.addTaggedContent("PAGE", page);
-	}
-
 	@Test
 	public void financialTimes_ft911_1_FirstDocTest() {
 		System.out.println("Begin Test >>> financialTimes_ft911_1_FirstDocTest()");
@@ -110,6 +89,61 @@ public class DocumentParserTest {
 
 		System.out.println("Test Complete >>> financialTimes_ft911_1_FirstDocTest()");
 	}
+	
+	@Test
+	public void federalRegister_fr940104_0_Test() {
+		System.out.println("Begin Test >>> federalRegister_fr940104_0_Test()");
+		String docno = " FR940104-0-00001 ";
+		String parent = " FR940104-0-00001 ";
+		String text = "\n"
+				+ " \n"
+				+ "<!-- PJG FTAG 4700 -->\n"
+				+ "\n"
+				+ "<!-- PJG STAG 4700 -->\n"
+				+ "\n"
+				+ "<!-- PJG ITAG l=90 g=1 f=1 -->\n"
+				+ "\n"
+				+ "<!-- PJG /ITAG -->\n"
+				+ "\n"
+				+ "<!-- PJG ITAG l=90 g=1 f=4 -->\n"
+				+ "Federal Register\n"
+				+ "<!-- PJG /ITAG -->\n"
+				+ "\n"
+				+ "<!-- PJG ITAG l=90 g=1 f=1 -->\n"
+				+ "&blank;/&blank;Vol. 59, No. 2&blank;/&blank;Tuesday, January 4, 1994&blank;/&blank;Rules and Regulations\n"
+				+ "\n"
+				+ "<!-- PJG 0012 frnewline -->\n"
+				+ "\n"
+				+ "<!-- PJG /ITAG -->\n"
+				+ "\n"
+				+ "<!-- PJG ITAG l=01 g=1 f=1 -->\n"
+				+ "Vol. 59, No. 2\n"
+				+ "<!-- PJG 0012 frnewline -->\n"
+				+ "\n"
+				+ "<!-- PJG /ITAG -->\n"
+				+ "\n"
+				+ "<!-- PJG ITAG l=02 g=1 f=1 -->\n"
+				+ "Tuesday, January 4, 1994\n"
+				+ "<!-- PJG 0012 frnewline -->\n"
+				+ "\n"
+				+ "<!-- PJG 0012 frnewline -->\n"
+				+ "\n"
+				+ "<!-- PJG /ITAG -->\n"
+				+ "\n"
+				+ "<!-- PJG /STAG -->\n"
+				+ "\n"
+				+ "<!-- PJG /FTAG -->";
+		initExpectedDoc_fr940104_0(docno, parent, text);
+		assertDocsEqual(expectedDoc, expectedDoc); // TODO set to actual doc
+		
+		System.out.println("Test Complete >>> federalRegister_fr940104_0_Test()");
+	}
+
+	private void initExpectedDoc_fr940104_0(String docno, String parent, String text) {
+		expectedDoc.setDocno(docno);
+		expectedDoc.addTaggedContent("TEXT", text);
+		expectedDoc.addTaggedContent("PARENT", parent);
+	}
 
 	private void assertDocsEqual(CustomDocument actual, CustomDocument expected) {
 		assertEquals(expected.getDocno(), actual.getDocno());
@@ -127,6 +161,27 @@ public class DocumentParserTest {
 		expectedDoc.addTaggedContent("DATE", date);
 		expectedDoc.addTaggedContent("HEADLINE", headline);
 		expectedDoc.addTaggedContent("TEXT", text);
+		expectedDoc.addTaggedContent("PUB", pub);
+		expectedDoc.addTaggedContent("PAGE", page);
+	}
+	
+	private void initExpectedDocft934(String docno, String profile, String date, String headline, String byline,
+			String text, String xx1, String co, String xx2, String cn, String xx3, String in, String xx4, String tp,
+			String pub, String page) {
+		expectedDoc.setDocno(docno);
+		expectedDoc.addTaggedContent("PROFILE", profile);
+		expectedDoc.addTaggedContent("DATE", date);
+		expectedDoc.addTaggedContent("HEADLINE", headline);
+		expectedDoc.addTaggedContent("BYLINE", byline);
+		expectedDoc.addTaggedContent("TEXT", text);
+		expectedDoc.addTaggedContent("XX", xx1);
+		expectedDoc.addTaggedContent("CO", co);
+		expectedDoc.addTaggedContent("XX", xx2);
+		expectedDoc.addTaggedContent("CN", cn);
+		expectedDoc.addTaggedContent("XX", xx3);
+		expectedDoc.addTaggedContent("IN", in);
+		expectedDoc.addTaggedContent("XX", xx4);
+		expectedDoc.addTaggedContent("TP", tp);
 		expectedDoc.addTaggedContent("PUB", pub);
 		expectedDoc.addTaggedContent("PAGE", page);
 	}

@@ -44,6 +44,11 @@ public class CustomHandlerSAX extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) {
 		
+		String temp = currentValue.toString();
+		if (currentValue.toString().equals(" FR940104-0-00099 ")) {
+			System.out.println("1");
+		}
+		
 		if (qName.equalsIgnoreCase(DOC)) {
 			addDocToDocuments(getCurrentDoc());
 		}

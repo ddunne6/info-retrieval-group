@@ -24,6 +24,8 @@ public class CustomDocument {
 		switch (tag) {
 			case DOCNO:		setDocno(tagContent);
 							break;
+			case XML_DUMMY: // Do nothing
+							break;
 			default:		addOtherInfo(tag, tagContent);
 							break;
 		}

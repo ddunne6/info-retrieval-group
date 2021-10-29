@@ -12,6 +12,8 @@ public final class SGMLTags {
 	public static final String TEXT = "TEXT";
 	public static final String PUB = "PUB";
 	public static final String PAGE = "PAGE";
+	
+	public static final String XML_DUMMY = "thistagisunique";
 
 	public static final List<String> FT_TAGS = Arrays.asList(DOC, DOCNO, PROFILE, DATE, HEADLINE, TEXT, PUB, PAGE);
 

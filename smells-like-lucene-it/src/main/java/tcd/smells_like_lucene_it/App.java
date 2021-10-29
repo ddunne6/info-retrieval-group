@@ -13,14 +13,25 @@ public class App
     {
         // Get Each File for Financial Times
         List<String> financialTimesFiles = getFinancialTimesFiles();
+        // Get Each file for Federal Register
+        List<String> federalRegisterFiles = getAllFederalRegisterFiles();
+        
+        
         List<CustomDocument> documents = new ArrayList<CustomDocument>();
         // Parse each file
-        for(String fileName: financialTimesFiles) {
+//        for(String fileName: financialTimesFiles) {
+//        	DocumentParserSGML documentParser = new DocumentParserSGML();
+//            documents = documentParser.parseFT(fileName);
+//            System.out.println("Parsing and Indexing COMPLETE");
+//        }
+        
+        for(String fileName: federalRegisterFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
-            documents = documentParser.parse(fileName);
-            // TODO index the documents
+            documents = documentParser.parseFR(fileName);
+            System.out.println("Parsing and Indexing COMPLETE");
         }
         
+        //TODO move this to within for-loop lines 18-22
         CreateIndex CI = new CreateIndex();
         CI.IndexFT(documents);
 
