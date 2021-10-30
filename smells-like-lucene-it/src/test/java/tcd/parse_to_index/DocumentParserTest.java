@@ -141,8 +141,8 @@ public class DocumentParserTest {
 
 	private void initExpectedDoc_fr940104_0(String docno, String parent, String text) {
 		expectedDoc.setDocno(docno);
-		expectedDoc.addTaggedContent("TEXT", text);
-		expectedDoc.addTaggedContent("PARENT", parent);
+		expectedDoc.addTaggedContent(new CustomTag("TEXT", text));
+		expectedDoc.addTaggedContent(new CustomTag("PARENT", parent));
 	}
 
 	private void assertDocsEqual(CustomDocument actual, CustomDocument expected) {
@@ -150,39 +150,39 @@ public class DocumentParserTest {
 		assertEquals(expected.getOtherInfo().size(), actual.getOtherInfo().size());
 		for (int i = 0; i < actual.getOtherInfo().size(); i++) {
 			assertEquals(expected.getOtherInfo().get(i).getTag(), actual.getOtherInfo().get(i).getTag());
-			assertEquals(expected.getOtherInfo().get(i).getContent(), actual.getOtherInfo().get(i).getContent());
+			assertEquals(expected.getOtherInfo().get(i).getContentAsString(), actual.getOtherInfo().get(i).getContentAsString());
 		}
 	}
 
 	private void initExpectedDocft911(String docno, String profile, String date, String headline, String text,
 			String pub, String page) {
 		expectedDoc.setDocno(docno);
-		expectedDoc.addTaggedContent("PROFILE", profile);
-		expectedDoc.addTaggedContent("DATE", date);
-		expectedDoc.addTaggedContent("HEADLINE", headline);
-		expectedDoc.addTaggedContent("TEXT", text);
-		expectedDoc.addTaggedContent("PUB", pub);
-		expectedDoc.addTaggedContent("PAGE", page);
+		expectedDoc.addTaggedContent(new CustomTag("PROFILE", profile));
+		expectedDoc.addTaggedContent(new CustomTag("DATE", date));
+		expectedDoc.addTaggedContent(new CustomTag("HEADLINE", headline));
+		expectedDoc.addTaggedContent(new CustomTag("TEXT", text));
+		expectedDoc.addTaggedContent(new CustomTag("PUB", pub));
+		expectedDoc.addTaggedContent(new CustomTag("PAGE", page));
 	}
 	
 	private void initExpectedDocft934(String docno, String profile, String date, String headline, String byline,
 			String text, String xx1, String co, String xx2, String cn, String xx3, String in, String xx4, String tp,
 			String pub, String page) {
 		expectedDoc.setDocno(docno);
-		expectedDoc.addTaggedContent("PROFILE", profile);
-		expectedDoc.addTaggedContent("DATE", date);
-		expectedDoc.addTaggedContent("HEADLINE", headline);
-		expectedDoc.addTaggedContent("BYLINE", byline);
-		expectedDoc.addTaggedContent("TEXT", text);
-		expectedDoc.addTaggedContent("XX", xx1);
-		expectedDoc.addTaggedContent("CO", co);
-		expectedDoc.addTaggedContent("XX", xx2);
-		expectedDoc.addTaggedContent("CN", cn);
-		expectedDoc.addTaggedContent("XX", xx3);
-		expectedDoc.addTaggedContent("IN", in);
-		expectedDoc.addTaggedContent("XX", xx4);
-		expectedDoc.addTaggedContent("TP", tp);
-		expectedDoc.addTaggedContent("PUB", pub);
-		expectedDoc.addTaggedContent("PAGE", page);
+		expectedDoc.addTaggedContent(new CustomTag("PROFILE", profile));
+		expectedDoc.addTaggedContent(new CustomTag("DATE", date));
+		expectedDoc.addTaggedContent(new CustomTag("HEADLINE", headline));
+		expectedDoc.addTaggedContent(new CustomTag("BYLINE", byline));
+		expectedDoc.addTaggedContent(new CustomTag("TEXT", text));
+		expectedDoc.addTaggedContent(new CustomTag("XX", xx1));
+		expectedDoc.addTaggedContent(new CustomTag("CO", co));
+		expectedDoc.addTaggedContent(new CustomTag("XX", xx2));
+		expectedDoc.addTaggedContent(new CustomTag("CN", cn));
+		expectedDoc.addTaggedContent(new CustomTag("XX", xx3));
+		expectedDoc.addTaggedContent(new CustomTag("IN", in));
+		expectedDoc.addTaggedContent(new CustomTag("XX", xx4));
+		expectedDoc.addTaggedContent(new CustomTag("TP", tp));
+		expectedDoc.addTaggedContent(new CustomTag("PUB", pub));
+		expectedDoc.addTaggedContent(new CustomTag("PAGE", page));
 	}
 }

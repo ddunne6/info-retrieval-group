@@ -20,18 +20,18 @@ public class CustomDocument {
 		return otherInfo;
 	}
 	
-	public void addTaggedContent(String tag, String tagContent) {
-		switch (tag) {
-			case DOCNO:		setDocno(tagContent);
+	public void addTaggedContent(CustomTag attrib) {
+		switch (attrib.getTag()) {
+			case DOCNO:		setDocno(attrib.getContentAsString());
 							break;
 			case XML_DUMMY: // Do nothing
 							break;
-			default:		addOtherInfo(tag, tagContent);
+			default:		addOtherInfo(attrib);
 							break;
 		}
 	}
 	
-	private void addOtherInfo(String tag, String tagContent) {
-		otherInfo.add(new CustomTag(tag, tagContent));
+	private void addOtherInfo(CustomTag attrib) {
+		otherInfo.add(attrib);
 	}
 }

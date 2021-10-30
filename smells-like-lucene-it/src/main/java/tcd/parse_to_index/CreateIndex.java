@@ -58,7 +58,7 @@ public class CreateIndex {
 			while(rawTags.hasNext())
 			{
 				CustomTag tempOtherInfo = rawTags.next();
-				document.add(new TextField(tempOtherInfo.getTag(), tempOtherInfo.getContent(), Field.Store.YES));
+				document.add(new TextField(tempOtherInfo.getTag(), tempOtherInfo.getContentAsString(), Field.Store.YES));
 			}
 			documents.add(document);
 		}
