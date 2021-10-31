@@ -24,3 +24,12 @@ hs_err_pid*
 
 # Assignment 2 documents
 Assignment\ Two/
+
+# Temporary folder
+smells-like-lucene-it/temp-sgml-to-xml/
+
+# Index
+index_corpus/
+
+# Target
+smells-like-lucene-it/target/

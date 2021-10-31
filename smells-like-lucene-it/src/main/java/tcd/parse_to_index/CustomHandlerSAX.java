@@ -4,6 +4,7 @@ import static tcd.constants.SGMLTags.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -15,6 +16,7 @@ public class CustomHandlerSAX extends DefaultHandler {
 	private StringBuilder currentValue = new StringBuilder();
 	private CustomDocument currentDoc;
 	private List<CustomDocument> documents = new ArrayList<CustomDocument>();
+	private Stack<CustomTag> attributes = new Stack<CustomTag>();
 
 	@Override
 	public void startDocument() {
@@ -28,11 +30,12 @@ public class CustomHandlerSAX extends DefaultHandler {
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-
-		resetCurrentValue();
-		
 		if(qName.equalsIgnoreCase(DOC)) {
 			setCurrentDoc(new CustomDocument());
+		}
+		else {
+			CustomTag element = new CustomTag(qName);
+			this.attributes.push(element);
 		}
 
 	}
@@ -44,23 +47,27 @@ public class CustomHandlerSAX extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) {
 		
+		String temp = currentValue.toString();
+		
 		if (qName.equalsIgnoreCase(DOC)) {
 			addDocToDocuments(getCurrentDoc());
 		}
 		else {
-			addTaggedContentToDoc(qName, currentValue.toString());
+			CustomTag element = attributes.pop();
+			addTaggedContentToDoc(element);
 		}
 
 	}
 
-	private void addTaggedContentToDoc(String tagName, String content) {
-		this.currentDoc.addTaggedContent(tagName, content);
+	private void addTaggedContentToDoc(CustomTag attrib) {
+		this.currentDoc.addTaggedContent(attrib);
 	}
 
 	@Override
 	public void characters(char ch[], int start, int length) {
-		currentValue.append(ch, start, length);
-
+		CustomTag element = attributes.pop();
+		element.appendContent(ch, start, length);
+		this.attributes.push(element);
 	}
 
 	public CustomDocument getCurrentDoc() {

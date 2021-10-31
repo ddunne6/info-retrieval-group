@@ -2,11 +2,15 @@ package tcd.parse_to_index;
 
 public class CustomTag {
 	private String tag;
-	private String content;
+	private String contentAsString;
+	private StringBuilder content = new StringBuilder();
 	
-	public CustomTag(String initTag, String initContent) {
+	public CustomTag(String initTag) {
 		setTag(initTag);
-		setContent(initContent);
+	}
+	public CustomTag(String initTag, String content) {
+		setTag(initTag);
+		setContent(content);
 	}
 	public String getTag() {
 		return tag;
@@ -14,10 +18,15 @@ public class CustomTag {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
-	public String getContent() {
-		return content;
+	public String getContentAsString() {
+		return content.toString();
 	}
-	public void setContent(String content) {
-		this.content = content;
+	public void appendContent(char ch[], int start, int length) {
+		this.content.append(ch, start, length);
+		this.contentAsString = getContentAsString();
+	}
+	public void setContent(String s) {
+		this.content = new StringBuilder(s);
+		this.contentAsString = getContentAsString();
 	}
 }
