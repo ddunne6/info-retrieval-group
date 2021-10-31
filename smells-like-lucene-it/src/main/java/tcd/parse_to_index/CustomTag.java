@@ -27,5 +27,6 @@ public class CustomTag {
 	}
 	public void setContent(String s) {
 		this.content = new StringBuilder(s);
+		this.contentAsString = getContentAsString();
 	}
 }

@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,28 +70,22 @@ public class DocumentParserSGML {
 	}
 
 	private void removeEntities(String fileAsXML) {
+		Path path = Paths.get(fileAsXML);
+		Charset charset = StandardCharsets.UTF_8;
+
+		String content;
 		try {
-			File file = new File(fileAsXML);
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			String line = "", oldtext = "";
-			while ((line = reader.readLine()) != null) {
-				oldtext += line + "\r\n";
-			}
-			reader.close();
-			String newtext = oldtext.replaceAll("&\\w+", "");
-
-			FileWriter writer = new FileWriter(fileAsXML);
-			writer.write(newtext);
-			writer.close();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			content = new String(Files.readAllBytes(path), charset);
+			content = content.replaceAll("&\\w+", "");
+			Files.write(path, content.getBytes(charset));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	private String decorateFileToXML(String filePath) {
 
-		String tempFile = "temp-sgml-to-xml/" + System.nanoTime() + ".xml";
+		String tempFile = "temp-sgml-to-xml/" + System.nanoTime() + ".xml"; //TODO return saved copy instead of redoing work
 		Path path = Paths.get(tempFile);
 		try {
 			Files.deleteIfExists(path);

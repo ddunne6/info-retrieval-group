@@ -18,20 +18,19 @@ public class App
         
         
         List<CustomDocument> documents = new ArrayList<CustomDocument>();
-        // Parse each file
-//        for(String fileName: financialTimesFiles) {
-//        	DocumentParserSGML documentParser = new DocumentParserSGML();
-//            documents = documentParser.parseFT(fileName);
-//            System.out.println("Parsing and Indexing COMPLETE");
-//        }
+        // Parse Financial Times
+        for(String fileName: financialTimesFiles) {
+        	DocumentParserSGML documentParser = new DocumentParserSGML();
+            documents = documentParser.parseFT(fileName);
+        }
         
+        // Parse Federal Register
         for(String fileName: federalRegisterFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFR(fileName);
-            System.out.println("Parsing and Indexing COMPLETE");
         }
         
-        //TODO move this to within for-loop lines 18-22
+        //TODO move this to within for-loop for Federal Register and Financial Times
         CreateIndex CI = new CreateIndex();
         CI.IndexFT(documents);
 
