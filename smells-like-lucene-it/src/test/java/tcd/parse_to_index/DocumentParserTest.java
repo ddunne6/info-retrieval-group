@@ -17,8 +17,8 @@ public class DocumentParserTest {
 	@Before
 	public void setUp() {
 		documentParser = new DocumentParserSGML();
-		ft911docs = documentParser.parseFT(getFinancialTimesFile(FT_911_PATTERN, 1));
-		ft934docs = documentParser.parseFT(getFinancialTimesFile(FT_934_PATTERN, 7));
+		ft911docs = documentParser.parseFTLA(getFinancialTimesFile(FT_911_PATTERN, 1));
+		ft934docs = documentParser.parseFTLA(getFinancialTimesFile(FT_934_PATTERN, 7));
 		fr940104docs = documentParser.parseFR(getAllFederalRegisterFiles().get(0));
 		expectedDoc = new CustomDocument();
 	}
