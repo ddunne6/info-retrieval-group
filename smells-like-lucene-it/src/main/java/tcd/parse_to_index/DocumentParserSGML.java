@@ -24,6 +24,7 @@ import org.apache.commons.io.LineIterator;
 import org.xml.sax.SAXException;
 
 import static tcd.constants.SGMLTags.*;
+import static tcd.constants.FilePathPatterns.*;
 
 public class DocumentParserSGML {
 	// Parse file and return list of documents
@@ -54,9 +55,24 @@ public class DocumentParserSGML {
 		return documents;
 	}
 	
-	public List<CustomDocument> parseFT(String filePath) {
+	public List<CustomDocument> parseFTLA(String filePath) {
 		System.out.println("STARTED Parsing file >>> " + filePath);
 		String fileAsXML = decorateFileToXML(filePath);
+		System.out.println("FINISHED Parsing file >>> " + filePath);
+		return parse(fileAsXML);
+	}
+	
+	public List<CustomDocument> parseFBIS(String filePath) {
+		System.out.println("STARTED Parsing file >>> " + filePath);
+		String fileAsXML = decorateFileToXML(filePath);
+		FileDecorator fileDecorator = new FileDecorator(fileAsXML);
+		fileDecorator.replaceAll("&\\w+", "");
+		fileDecorator.replaceAll("&", "");
+		fileDecorator.replaceAll("P=\\w+", "");
+		fileDecorator.replaceAll(" ID=\\w+-\\w+-\\w+\\w-\\w+", "");
+		fileDecorator.replaceAll("<\\d>", "<digit>");
+		fileDecorator.replaceAll("</\\d>", "</digit>");
+		fileDecorator.decorate();
 		System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);
 	}
@@ -64,28 +80,18 @@ public class DocumentParserSGML {
 	public List<CustomDocument> parseFR(String filePath) {
 		System.out.println("STARTED Parsing file >>> " + filePath);
 		String fileAsXML = decorateFileToXML(filePath);
-		removeEntities(fileAsXML);
+		FileDecorator fileDecorator = new FileDecorator(fileAsXML);
+		fileDecorator.replaceAll("&\\w+", "");
+		fileDecorator.replaceAll("&", "");
+		fileDecorator.decorate();
 		System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);
 	}
-
-	private void removeEntities(String fileAsXML) {
-		Path path = Paths.get(fileAsXML);
-		Charset charset = StandardCharsets.UTF_8;
-
-		String content;
-		try {
-			content = new String(Files.readAllBytes(path), charset);
-			content = content.replaceAll("&\\w+", "");
-			Files.write(path, content.getBytes(charset));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	private String decorateFileToXML(String filePath) {
-
-		String tempFile = "temp-sgml-to-xml/" + System.nanoTime() + ".xml"; //TODO return saved copy instead of redoing work
+		String[] fileSplit = filePath.split("/");
+		String tempFile = TEMP_FOLDER + fileSplit[fileSplit.length - 1] + ".xml"; // TODO return saved copy instead of redoing work
 		Path path = Paths.get(tempFile);
 		try {
 			Files.deleteIfExists(path);

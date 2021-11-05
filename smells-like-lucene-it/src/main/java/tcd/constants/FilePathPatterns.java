@@ -13,6 +13,7 @@ import java.util.Set;
 
 public final class FilePathPatterns {
 	public static final String PATH_TO_MEDIA = "../Assignment Two/Assignment Two/";
+	public static final String TEMP_FOLDER = "temp-sgml-to-xml/";
 
 	public static final String FINANCIAL_TIMES = "ft/";
 	public static final String FEDERAL_REGISTER = "fr94/";
@@ -90,6 +91,31 @@ public final class FilePathPatterns {
 		}
 		return fileNames;
 	}
+	
+	public static List<String> getAllForeignBroadcastISFiles() {
+		String folderPath = PATH_TO_MEDIA + FOREIGN_BROADCAST;
+		File directoryPath = new File(folderPath);
+		List<String> directoryFiles = new ArrayList<String>(Arrays.asList(directoryPath.list()));
+		for (int i=0; i<directoryFiles.size() ; i++) {
+			directoryFiles.set(i, folderPath + directoryFiles.get(i));
+		}
+		// Remove readme files
+		directoryFiles.remove(directoryFiles.size() - 1);
+		directoryFiles.remove(directoryFiles.size() - 1);
+		return directoryFiles;
+	}
+	
+	public static List<String> getAllLATimesFiles() {
+		String folderPath = PATH_TO_MEDIA + LOST_ANGELOS_TIMES;
+		File directoryPath = new File(folderPath);
+		List<String> directoryFiles = new ArrayList<String>(Arrays.asList(directoryPath.list()));
+		for (int i=0; i<directoryFiles.size() ; i++) {
+			directoryFiles.set(i, folderPath + directoryFiles.get(i));
+		}
+		// Remove readme files
+		directoryFiles.remove(directoryFiles.size() - 1);
+		directoryFiles.remove(directoryFiles.size() - 1);
+		return directoryFiles;
+	}
 
-	// TODO: Add remaining files
 }
