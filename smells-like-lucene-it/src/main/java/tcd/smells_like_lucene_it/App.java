@@ -48,7 +48,7 @@ public class App
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFR(fileName);
 
-            CI.IndexFT(documents);
+            CI.IndexFR(documents);
         }
 
         
