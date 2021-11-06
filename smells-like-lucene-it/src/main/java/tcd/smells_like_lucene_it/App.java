@@ -18,6 +18,9 @@ public class App
         List<String> financialTimesFiles = getFinancialTimesFiles();
         // Get Each file for Federal Register
         List<String> federalRegisterFiles = getAllFederalRegisterFiles();
+
+        CreateIndex CI = new CreateIndex();
+
         // Get Each file for Foreign Broadcast Information Service
         List<String> foreignBroadcastISFiles = getAllForeignBroadcastISFiles();
         // Get Each file for Los Angeles Times
@@ -25,22 +28,30 @@ public class App
         
         // Clear temporary folder
         clearTempDirectory(new File(TEMP_FOLDER));
+
         
         List<CustomDocument> documents = new ArrayList<CustomDocument>();
         
         // Parse Financial Times
         for(String fileName: financialTimesFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
+            
+
             documents = documentParser.parseFTLA(fileName);
             //TODO Index
+            CI.IndexFT(documents);
+
         }
         
         // Parse Federal Register
         for(String fileName: federalRegisterFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFR(fileName);
-            //TODO Index
+
+            CI.IndexFR(documents);
         }
+
+        
         
         // Parse Foreign Broadcast Information Service
         for(String fileName: foreignBroadcastISFiles) {
@@ -56,9 +67,7 @@ public class App
             //TODO Index
         }
         
-        // TODO move this to within for-loops
-        CreateIndex CI = new CreateIndex();
-        CI.IndexFT(documents);
+      
 
         System.out.println("Parsing and Indexing COMPLETE");
 
