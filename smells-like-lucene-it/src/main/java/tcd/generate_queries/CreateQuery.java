@@ -30,8 +30,9 @@ public class CreateQuery {
 	 */
 	private static File topicsFile = new File("../topics");
 	private static Elements topics;
-		
-	public static void main(String[] args) throws IOException, ParseException{
+	
+	public static void queryTopics() throws IOException, ParseException{
+
 		// Parse topics file with Jsoup & select topic tags
 		Document doc = Jsoup.parse(topicsFile, "UTF-8", "");
 		topics = doc.body().select("top");
@@ -68,5 +69,6 @@ public class CreateQuery {
     			
     	}
     	System.out.println("Done");
-    }
+    
+	}
 }
