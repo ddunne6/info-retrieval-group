@@ -33,3 +33,6 @@ index_corpus/
 
 # Target
 smells-like-lucene-it/target/
+
+# Results file
+results_file
