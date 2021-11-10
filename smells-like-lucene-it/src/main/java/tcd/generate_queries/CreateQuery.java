@@ -30,6 +30,7 @@ public class CreateQuery {
 	private static File topicsFile = new File("../topics");
 	private static Elements topics;
 	private static String indexDir = "../index_corpus";
+	private static int MAX_RESULTS = 1000;
 	
 	public static void queryTopics() throws IOException, ParseException{
 
@@ -50,19 +51,21 @@ public class CreateQuery {
 		QueryParser parser = new QueryParser("content", new MyCustomAnalyzer());
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
 
-		int queryId = 0;
 		// Iterate through topic tags & structure queries
     	for(Element t : topics) {
-			queryId++;
-
-			String title = t.select("title").text();
+    		String title = t.select("title").text();
     		String description = t.select("desc").text();
+    		String queryId = t.select("num").text();
     		
+
+    		// little bit of preprocessing
     		int startIndex = "Description:".length() + 1;
     		int indexOfNarr = description.indexOf("Narrative:");
     		description = description.substring(0, indexOfNarr);
     		description = description.substring(startIndex, description.length());
     		
+    		int queryNumIndex = queryId.indexOf("Number: ") + "Number: ".length();
+    		queryId = queryId.substring(queryNumIndex, queryNumIndex+4).trim();
 			
     		//title = "\"" + title + "\"";
 	
@@ -74,7 +77,7 @@ public class CreateQuery {
 			Query newQuery = parser.parse(newBooleanQuery.build().toString());
 
 			// Get query results from the index searcher
-            ScoreDoc[] hits = isearcher.search(newQuery, 1000).scoreDocs;
+            ScoreDoc[] hits = isearcher.search(newQuery, MAX_RESULTS).scoreDocs;
             System.out.println(hits.length);
 
             for (int i = 0; i < hits.length; i++) {
@@ -88,7 +91,7 @@ public class CreateQuery {
 
     	}
 		fileWriter.close();
-    	System.out.println("Querying Done \nNumber of Queries: " + queryId);
+    	System.out.println("Querying Done ");
     
 	}
 }
