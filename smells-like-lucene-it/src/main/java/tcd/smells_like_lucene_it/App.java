@@ -13,9 +13,18 @@ import org.apache.commons.io.FileUtils;
 
 public class App 
 {
-    public static void main( String[] args ) throws IOException
+    public static void main( String[] args )
     {
-        // Get Each file for Financial Times
+    	try {
+			parseAndIndexCorpus();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+    }
+    
+    private static void parseAndIndexCorpus() throws IOException {
+    	// Get Each file for Financial Times
         List<String> financialTimesFiles = getFinancialTimesFiles();
         // Get Each file for Federal Register
         List<String> federalRegisterFiles = getAllFederalRegisterFiles();
@@ -26,41 +35,42 @@ public class App
         
         // Clear temporary folder
         clearTempDirectory(new File(TEMP_FOLDER));
-
         CreateIndex CI = new CreateIndex();
-        
         List<CustomDocument> documents = new ArrayList<CustomDocument>();
         
+        System.out.println("STARTING Parsing and Indexing...");
         // Parse Financial Times
-        
         for(String fileName: financialTimesFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFTLA(fileName);
-            CI.Indexcorpus(documents);
+            CI.indexCorpus(documents);
         }
 
         // Parse Federal Register
         for(String fileName: federalRegisterFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFR(fileName);
-            CI.Indexcorpus(documents);
+            CI.indexCorpus(documents);
         }
         
         // Parse Foreign Broadcast Information Service
         for(String fileName: foreignBroadcastISFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFBIS(fileName);
-            CI.Indexcorpus(documents);
+            CI.indexCorpus(documents);
         }
         
         // Parse Los Angeles Times
         for(String fileName: losAngelosTimesFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFTLA(fileName);
-            CI.IndexFT(documents);
+            CI.indexCorpus(documents);
         }
+        
+        // Commit changes and close everything
+        CI.closeIndex();
+        
         System.out.println("Parsing and Indexing COMPLETE");
-
     }
 
 	private static void clearTempDirectory(File tempFolder) {

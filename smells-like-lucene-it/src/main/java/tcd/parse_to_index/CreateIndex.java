@@ -87,7 +87,7 @@ public class CreateIndex {
     		case "ADDRESS":
     			return "Content";
     		default:
-    				return "Other";
+    			return "Other";
     			
     	}
     	
@@ -132,7 +132,7 @@ public class CreateIndex {
 		iwriter = new IndexWriter(directory, config);
 	}
 	
-	public void Indexcorpus(List<CustomDocument> rawDocuments) throws IOException
+	public void indexCorpus(List<CustomDocument> rawDocuments) throws IOException
 	{
 		String Mappedtag;
 		for (CustomDocument tempDoc : rawDocuments)
@@ -155,6 +155,16 @@ public class CreateIndex {
 			iwriter.addDocuments(documents);
 			documents.clear();
 		}		
+		System.out.println("INDEXED Documents");
+	}
+	
+	public void closeIndex() {
+		try {
+			iwriter.close();
+			directory.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
