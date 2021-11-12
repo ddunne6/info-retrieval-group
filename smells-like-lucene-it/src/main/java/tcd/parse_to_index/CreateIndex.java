@@ -1,19 +1,17 @@
 package tcd.parse_to_index;
-
+import static tcd.constants.FilePathPatterns.*;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
+
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
@@ -29,7 +27,7 @@ import tcd.analyzers.MyCustomAnalyzer;
 // Create index using objects from DocumentParser.parse()
 public class CreateIndex {
 	
-	String INDEX_DIRECTORY_CORPUS = "../index_corpus";
+	
 	ArrayList<Document> documents = new ArrayList<Document>();
 	
 	IndexWriterConfig config;

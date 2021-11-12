@@ -26,6 +26,7 @@ public class App
         
         // Clear temporary folder
         clearTempDirectory(new File(TEMP_FOLDER));
+        clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS));
 
         CreateIndex CI = new CreateIndex();
         
@@ -57,7 +58,7 @@ public class App
         for(String fileName: losAngelosTimesFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFTLA(fileName);
-            CI.IndexFT(documents);
+            CI.Indexcorpus(documents);
         }
         System.out.println("Parsing and Indexing COMPLETE");
 
