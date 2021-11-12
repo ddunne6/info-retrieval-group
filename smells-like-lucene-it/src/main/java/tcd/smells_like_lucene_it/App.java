@@ -26,7 +26,7 @@ public class App
         
         // Clear temporary folder
         clearTempDirectory(new File(TEMP_FOLDER));
-        clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS));
+
 
         CreateIndex CI = new CreateIndex();
         
@@ -39,7 +39,7 @@ public class App
             documents = documentParser.parseFTLA(fileName);
             CI.Indexcorpus(documents);
         }
-
+        
         // Parse Federal Register
         for(String fileName: federalRegisterFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();

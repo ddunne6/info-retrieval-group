@@ -35,7 +35,7 @@ public class CreateIndex {
 	Directory directory;
 	PerFieldAnalyzerWrapper aWrapper;
 	Map<String, Analyzer> analyzerMap;
-	
+	Boolean Flag = false;
     FieldType ft = new FieldType(TextField.TYPE_STORED);
 
     public String MapTag(String tag)
@@ -126,7 +126,7 @@ public class CreateIndex {
 	    ft.setStoreTermVectorPayloads(true);
 		
 		config = new IndexWriterConfig(aWrapper);
-		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 		iwriter = new IndexWriter(directory, config);
 	}
 	
@@ -152,7 +152,14 @@ public class CreateIndex {
 			documents.add(document);
 			iwriter.addDocuments(documents);
 			documents.clear();
-		}		
+		}	
+		//Switch to append so that it doesn't create a new index for next set of documents
+		if(Flag == false)
+		{
+			config.setOpenMode(IndexWriterConfig.OpenMode.APPEND);
+			iwriter = new IndexWriter(directory, config);
+			Flag = true;
+		}
 	}
 
 }
