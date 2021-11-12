@@ -132,7 +132,7 @@ public class CreateIndex {
 		iwriter = new IndexWriter(directory, config);
 	}
 	
-	public void IndexFT(List<CustomDocument> rawDocuments) throws IOException
+	public void Indexcorpus(List<CustomDocument> rawDocuments) throws IOException
 	{
 		String Mappedtag;
 		for (CustomDocument tempDoc : rawDocuments)
@@ -156,55 +156,5 @@ public class CreateIndex {
 			documents.clear();
 		}		
 	}
-	
-	public void IndexFR(List<CustomDocument> rawDocuments) throws IOException
-	{
-		String Mappedtag;
-		for (CustomDocument tempDoc : rawDocuments)
-		{
-			Document document = new Document();
-			document.add(new StringField("Document Number", tempDoc.getDocno(), Field.Store.YES));
-			for(CustomTag tempOtherInfo : tempDoc.getOtherInfo())
-			{
-				Mappedtag = MapTag(tempOtherInfo.getTag());
-				if (!Mappedtag.contains("Tag not found"))
-				{
-					document.add(new Field(Mappedtag, tempOtherInfo.getContentAsString(), ft));
-				}
-				else
-				{
-					System.out.println("Unhandled tag: " + tempOtherInfo.getTag() );
-				}
-			}
-			documents.add(document);
-			iwriter.addDocuments(documents);
-			documents.clear();
-		}
-	}
-	
-	public void IndexFBIS(List<CustomDocument> rawDocuments) throws IOException
-	{
-		String Mappedtag;
-		for (CustomDocument tempDoc : rawDocuments)
-		{
-			Document document = new Document();
-			document.add(new StringField("Document Number", tempDoc.getDocno(), Field.Store.YES));
-			for(CustomTag tempOtherInfo : tempDoc.getOtherInfo())
-			{
-				Mappedtag = MapTag(tempOtherInfo.getTag());
-				if (!Mappedtag.contains("Tag not found"))
-				{
-					document.add(new Field(Mappedtag, tempOtherInfo.getContentAsString(), ft));
-				}
-				else
-				{
-					System.out.println("Unhandled tag: " + tempOtherInfo.getTag() );
-				}
-			}
-			documents.add(document);
-			iwriter.addDocuments(documents);
-			documents.clear();
-		}
-	}
-	
+
 }

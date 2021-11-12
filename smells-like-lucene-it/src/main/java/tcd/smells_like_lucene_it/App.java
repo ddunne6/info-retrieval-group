@@ -36,21 +36,21 @@ public class App
         for(String fileName: financialTimesFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFTLA(fileName);
-            CI.IndexFT(documents);
+            CI.Indexcorpus(documents);
         }
 
         // Parse Federal Register
         for(String fileName: federalRegisterFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFR(fileName);
-            CI.IndexFR(documents);
+            CI.Indexcorpus(documents);
         }
         
         // Parse Foreign Broadcast Information Service
         for(String fileName: foreignBroadcastISFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFBIS(fileName);
-            CI.IndexFBIS(documents);
+            CI.Indexcorpus(documents);
         }
         
         // Parse Los Angeles Times
