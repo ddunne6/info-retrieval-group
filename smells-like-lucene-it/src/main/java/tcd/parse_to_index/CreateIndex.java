@@ -10,11 +10,13 @@ import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
@@ -36,6 +38,61 @@ public class CreateIndex {
 	PerFieldAnalyzerWrapper aWrapper;
 	Map<String, Analyzer> analyzerMap;
 	
+    FieldType ft = new FieldType(TextField.TYPE_STORED);
+
+    public String MapTag(String tag)
+    {
+    	switch(tag)
+    	{
+    		case "PROFILE":
+    		case "PUB":
+    		case "DATE":
+    		case "PAGE":
+    		case "USDEPT":
+    		case "USBUREAU":
+    		case "CFRNO":
+    		case "RINDOCK":
+    		case "AGENCY":
+    		case "ACTION":
+    		case "DATE1":
+    		case "HT":
+    		case "H3":
+    		case "H4":
+    		case "H5":
+    		case "H6":
+    		case "AU":
+    		case "F":
+    		case "PARENT":
+    		case "SIGNER":
+    		case "SIGNJOB":
+    		case "FRFILING":
+    		case "BILLING":
+    		case "FOOTCITE":
+    		case "FOOTNAME":
+    		case "FOOTNOTE":
+    		case "IMPORT":
+    		case "BYLINE":
+    		case "DATELINE":
+    			return "Other";
+    		case "HEADLINE":
+    		case "TI":
+    		case "HEADER":
+    		case "DOCTITLE":
+    			return "Title";
+    		case "TEXT":
+    		case "SUMMARY":
+    		case "FURTHER":
+    		case "SUPPLEM":
+    		case "TABLE":
+    		case "ADDRESS":
+    			return "Content";
+    		default:
+    				return "Other";
+    			
+    	}
+    	
+    }
+	
 	public CreateIndex() throws IOException
 	{
 	
@@ -43,6 +100,7 @@ public class CreateIndex {
 		
 		analyzerMap = new HashMap<String, Analyzer>();
 		
+		/* Leaving it here in case required later
 		//For Financial times Corpus
 		analyzerMap.put("PROFILE", new KeywordAnalyzer());
 		analyzerMap.put("PUB", new KeywordAnalyzer());
@@ -56,49 +114,47 @@ public class CreateIndex {
 		analyzerMap.put("RINDOCK", new KeywordAnalyzer());
 		analyzerMap.put("AGENCY", new KeywordAnalyzer());
 		analyzerMap.put("ACTION", new KeywordAnalyzer());
-	
+		*/
+ 
+		analyzerMap.put("Other", new WhitespaceAnalyzer());
+		analyzerMap.put("Document Number", new KeywordAnalyzer());
 		
 		aWrapper = new PerFieldAnalyzerWrapper(new MyCustomAnalyzer(),analyzerMap);
+		
+	    ft.setTokenized(true);
+	    ft.setStoreTermVectors(true);
+	    ft.setStoreTermVectorPositions(true);
+	    ft.setStoreTermVectorOffsets(true);
+	    ft.setStoreTermVectorPayloads(true);
 		
 		config = new IndexWriterConfig(aWrapper);
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 		iwriter = new IndexWriter(directory, config);
 	}
 	
-	public void IndexFT(List<CustomDocument> rawDocuments) throws IOException
+	public void Indexcorpus(List<CustomDocument> rawDocuments) throws IOException
 	{
-
+		String Mappedtag;
 		for (CustomDocument tempDoc : rawDocuments)
 		{
 			Document document = new Document();
 			document.add(new StringField("Document Number", tempDoc.getDocno(), Field.Store.YES));
 			for(CustomTag tempOtherInfo : tempDoc.getOtherInfo())
 			{
-				document.add(new TextField(tempOtherInfo.getTag(), tempOtherInfo.getContentAsString(), Field.Store.YES));
+				Mappedtag = MapTag(tempOtherInfo.getTag());
+				if (!Mappedtag.contains("Tag not found"))
+				{
+					document.add(new Field(Mappedtag, tempOtherInfo.getContentAsString(), ft));
+				}
+				else
+				{
+					System.out.println("Unhandled tag: " + tempOtherInfo.getTag() );
+				}
 			}
 			documents.add(document);
 			iwriter.addDocuments(documents);
 			documents.clear();
-		}	
-		
+		}		
 	}
-	
-	public void IndexFR(List<CustomDocument> rawDocuments) throws IOException
-	{
 
-		for (CustomDocument tempDoc : rawDocuments)
-		{
-			Document document = new Document();
-			document.add(new StringField("Document Number", tempDoc.getDocno(), Field.Store.YES));
-			for(CustomTag tempOtherInfo : tempDoc.getOtherInfo())
-			{
-				document.add(new TextField(tempOtherInfo.getTag(), tempOtherInfo.getContentAsString(), Field.Store.YES));
-			}
-			documents.add(document);
-			iwriter.addDocuments(documents);
-			documents.clear();
-		}	
-		
-	}
-	
 }
