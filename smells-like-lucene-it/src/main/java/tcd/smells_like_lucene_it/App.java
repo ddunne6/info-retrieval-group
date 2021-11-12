@@ -27,6 +27,7 @@ public class App
         // Clear temporary folder
         clearTempDirectory(new File(TEMP_FOLDER));
 
+
         CreateIndex CI = new CreateIndex();
         
         List<CustomDocument> documents = new ArrayList<CustomDocument>();
@@ -38,7 +39,7 @@ public class App
             documents = documentParser.parseFTLA(fileName);
             CI.Indexcorpus(documents);
         }
-
+        
         // Parse Federal Register
         for(String fileName: federalRegisterFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
@@ -57,7 +58,7 @@ public class App
         for(String fileName: losAngelosTimesFiles) {
         	DocumentParserSGML documentParser = new DocumentParserSGML();
             documents = documentParser.parseFTLA(fileName);
-            CI.IndexFT(documents);
+            CI.Indexcorpus(documents);
         }
         System.out.println("Parsing and Indexing COMPLETE");
 

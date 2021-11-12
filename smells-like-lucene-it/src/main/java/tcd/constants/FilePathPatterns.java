@@ -14,6 +14,7 @@ import java.util.Set;
 public final class FilePathPatterns {
 	public static final String PATH_TO_MEDIA = "../Assignment Two/Assignment Two/";
 	public static final String TEMP_FOLDER = "temp-sgml-to-xml/";
+	public static final String INDEX_DIRECTORY_CORPUS = "../index_corpus";
 
 	public static final String FINANCIAL_TIMES = "ft/";
 	public static final String FEDERAL_REGISTER = "fr94/";
