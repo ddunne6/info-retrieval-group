@@ -155,12 +155,12 @@ public class CreateIndex {
 		}		
 		System.out.println("INDEXED Documents");
 		//Switch to append so that it doesn't create a new index for next set of documents
-		if(Flag == false)
-		{
-			config.setOpenMode(IndexWriterConfig.OpenMode.APPEND);
-			iwriter = new IndexWriter(directory, config);
-			Flag = true;
-		}
+//		if(Flag == false)
+//		{
+//			config.setOpenMode(IndexWriterConfig.OpenMode.APPEND);
+//			iwriter = new IndexWriter(directory, config);
+//			Flag = true;
+//		}
 	}
 	
 	public void closeIndex() {
