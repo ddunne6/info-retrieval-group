@@ -23,6 +23,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import tcd.analyzers.MyCustomAnalyzer;
+import static tcd.constants.QueryConstants.*;
 
 // Create index using objects from DocumentParser.parse()
 public class CreateIndex {
@@ -76,16 +77,16 @@ public class CreateIndex {
     		case "TI":
     		case "HEADER":
     		case "DOCTITLE":
-    			return "Title";
+    			return TITLE;
     		case "TEXT":
     		case "SUMMARY":
     		case "FURTHER":
     		case "SUPPLEM":
     		case "TABLE":
     		case "ADDRESS":
-    			return "Content";
+    			return CONTENT;
     		default:
-    			return "Other";
+    			return OTHER;
     			
     	}
     	
@@ -114,8 +115,8 @@ public class CreateIndex {
 		analyzerMap.put("ACTION", new KeywordAnalyzer());
 		*/
  
-		analyzerMap.put("Other", new WhitespaceAnalyzer());
-		analyzerMap.put("Document Number", new KeywordAnalyzer());
+		analyzerMap.put(OTHER, new WhitespaceAnalyzer());
+		analyzerMap.put(DOCID, new KeywordAnalyzer());
 		
 		aWrapper = new PerFieldAnalyzerWrapper(new MyCustomAnalyzer(),analyzerMap);
 		
@@ -136,7 +137,7 @@ public class CreateIndex {
 		for (CustomDocument tempDoc : rawDocuments)
 		{
 			Document document = new Document();
-			document.add(new StringField("Document Number", tempDoc.getDocno(), Field.Store.YES));
+			document.add(new StringField(DOCID, tempDoc.getDocno(), Field.Store.YES));
 			for(CustomTag tempOtherInfo : tempDoc.getOtherInfo())
 			{
 				Mappedtag = MapTag(tempOtherInfo.getTag());
