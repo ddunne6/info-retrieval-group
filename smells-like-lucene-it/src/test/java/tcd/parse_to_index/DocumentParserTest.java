@@ -7,6 +7,7 @@ import static tcd.constants.FilePathPatterns.*;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class DocumentParserTest {
@@ -23,6 +24,7 @@ public class DocumentParserTest {
 		expectedDoc = new CustomDocument();
 	}
 
+	@Ignore
 	@Test
 	public void financialTimes_ft943_7_FirstDocTest() {
 		System.out.println("Begin Test >>> financialTimes_ft943_7_FirstDocTest()");
@@ -58,7 +60,7 @@ public class DocumentParserTest {
 
 		System.out.println("Test Complete >>> financialTimes_ft943_7_FirstDocTest()");
 	}
-
+	@Ignore
 	@Test
 	public void financialTimes_ft911_1_FirstDocTest() {
 		System.out.println("Begin Test >>> financialTimes_ft911_1_FirstDocTest()");
@@ -90,7 +92,7 @@ public class DocumentParserTest {
 
 		System.out.println("Test Complete >>> financialTimes_ft911_1_FirstDocTest()");
 	}
-
+	@Ignore
 	@Test
 	public void federalRegister_fr940104_0_Test() {
 		System.out.println("Begin Test >>> federalRegister_fr940104_0_Test()");

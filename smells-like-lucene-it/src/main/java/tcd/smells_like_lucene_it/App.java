@@ -14,15 +14,24 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.queryparser.classic.ParseException;
 
+
 public class App {
 	public static void main(String[] args) throws IOException, ParseException {
 		if(args.length < 1) {
-			parseAndIndexCorpus();
+			
 			generateQueries();
 		}
 		else {
 			if("index".equals(args[0])) {
-				parseAndIndexCorpus();
+				
+				File directory = new File(INDEX_DIRECTORY_CORPUS);
+				if (!directory.exists()) {
+					parseAndIndexCorpus();
+				} else {
+					// Index Already Created
+					System.out.println("Index already created. Delete index directory at '"+INDEX_DIRECTORY_CORPUS+"' to allow re-indexing.");
+				}
+				
 			}
 			else if("query".equals(args[0])) {
 				generateQueries();

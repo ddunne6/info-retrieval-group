@@ -1,8 +1,15 @@
-D:\Trinity Unversity\TCD Year Five\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\CustomTag.java
-D:\Trinity Unversity\TCD Year Five\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\smells_like_lucene_it\App.java
-D:\Trinity Unversity\TCD Year Five\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\CreateIndex.java
-D:\Trinity Unversity\TCD Year Five\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\CustomHandlerSAX.java
-D:\Trinity Unversity\TCD Year Five\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\DocumentParserSGML.java
-D:\Trinity Unversity\TCD Year Five\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\constants\FilePathPatterns.java
-D:\Trinity Unversity\TCD Year Five\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\constants\SGMLTags.java
-D:\Trinity Unversity\TCD Year Five\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\CustomDocument.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\constants\FilePathPatterns.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\smells_like_lucene_it\App.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\constants\Custom_StopWords.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\FileDecorator.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\utils\CommonTermsLowFreqBoostQuery.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\ReplaceTerm.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\utils\MultiQueryTermExtractor.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\generate_queries\CreateQuery.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\CustomDocument.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\CustomHandlerSAX.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\CustomTag.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\analyzers\MyCustomAnalyzer.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\CreateIndex.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\parse_to_index\DocumentParserSGML.java
+C:\Users\kevin\Git_Projects\info-retrieval-group\smells-like-lucene-it\src\main\java\tcd\constants\SGMLTags.java
