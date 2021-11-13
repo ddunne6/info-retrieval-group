@@ -25,12 +25,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import tcd.analyzers.MyCustomAnalyzer;
+import static tcd.constants.QueryConstants.*;
 
 public class CreateQuery {
 	private static File topicsFile = new File("../topics");
 	private static Elements topics;
 	private static String indexDir = "../index_corpus";
-	private static int MAX_RESULTS = 1000;
+	private static final int MAX_RESULTS = 1000;
 	
 	public void queryTopics() throws IOException, ParseException{
 
@@ -71,27 +72,26 @@ public class CreateQuery {
 	
 			// Term Constructor --> new Term(field, text)
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
-			newBooleanQuery.add(new TermQuery(new Term("title", title)), BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(new TermQuery(new Term("content", description)), BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(new TermQuery(new Term(TITLE, title)), BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(new TermQuery(new Term(CONTENT, description)), BooleanClause.Occur.SHOULD);
 			
 			Query newQuery = parser.parse(newBooleanQuery.build().toString());
 
 			// Get query results from the index searcher
             ScoreDoc[] hits = isearcher.search(newQuery, MAX_RESULTS).scoreDocs;
-            System.out.println(hits.length);
+            //System.out.println(hits.length);
 
             for (int i = 0; i < hits.length; i++) {
             	
+            	int rank = i+1;
                 //append query results to results file
                 Document hitDoc = isearcher.doc(hits[i].doc);
-                String appendToResults = queryId + " Q0 " + hitDoc.get("id") + " " + i + " " + hits[i].score + " STANDARD\n";
+                String appendToResults = queryId + " Q0 " + hitDoc.get(DOCID) + " " + rank + " " + hits[i].score + " STANDARD\n";
                 System.out.println(appendToResults);
 				fileWriter.write(appendToResults);
             }
-
     	}
 		fileWriter.close();
     	System.out.println("Querying Done ");
-    
 	}
 }
