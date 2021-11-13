@@ -33,7 +33,7 @@ public class CreateQuery {
 	private static String indexDir = "../index_corpus";
 	private static final int MAX_RESULTS = 1000;
 	
-	public static void queryTopics() throws IOException, ParseException{
+	public void queryTopics() throws IOException, ParseException{
 
 		// set up file writer for query results
 		File resultsFile = new File("../results_file");
