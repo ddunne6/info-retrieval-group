@@ -1,4 +1,9 @@
 package tcd.analyzers;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Analyzer.TokenStreamComponents;
@@ -16,6 +21,12 @@ import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import tcd.constants.Custom_StopWords;
+import org.apache.lucene.analysis.synonym.SolrSynonymParser;
+import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
+import org.apache.lucene.analysis.synonym.SynonymMap;
+
+import org.apache.lucene.util.CharsRef;
+import org.apache.lucene.analysis.core.FlattenGraphFilter;
 
 // Adapted from https://www.baeldung.com/lucene-analyzers
 
@@ -28,43 +39,73 @@ import tcd.constants.Custom_StopWords;
 //"KStem" uses the K-Stem stemming algorithm
 
 public class MyCustomAnalyzer extends Analyzer {
-	
-	private String stemmer;
-	
-	public MyCustomAnalyzer() {		
-		super();
-		this.stemmer = "Porter";			
-	}
-		
-	public MyCustomAnalyzer(String stem_name) {		
-		super();
-		this.stemmer = stem_name;		
-	}
-    
-	@Override
-	protected TokenStreamComponents createComponents(String fieldName) {
+
+        private String stemmer;
+        private final Path currentRelativePath = Paths.get("").toAbsolutePath();
+
+        public MyCustomAnalyzer() {
+                super();
+                this.stemmer = "Porter";
+        }
+
+        public MyCustomAnalyzer(String stem_name) {
+                super();
+                this.stemmer = stem_name;
+        }
+
+//Adding a synonym Map function (checking)
+private SynonymMap createSynonymMap() {
+                SynonymMap synMap = new SynonymMap(null, null, 0);
+                try {
+            BufferedReader countries = new BufferedReader(new FileReader(currentRelativePath + "/countries.txt")); //Create and put inside smells-like-lucene-it
+
+                        final SynonymMap.Builder builder = new SynonymMap.Builder(true);
+                        String country = countries.readLine();
+
+                        while(country != null) {
+                                builder.add(new CharsRef("country"), new CharsRef(country), true);
+                                builder.add(new CharsRef("countries"), new CharsRef(country), true);
+                                country = countries.readLine();
+                        }
+
+                        synMap = builder.build();
+                } catch (Exception e) {
+                        System.out.println("ERROR: " + e.getLocalizedMessage());
+                }
+                return synMap;
+        }
+
+
+//Synonym Map function adding  (Upto here)
+
+        @Override
+        protected TokenStreamComponents createComponents(String fieldName) {
         StandardTokenizer src = new StandardTokenizer();
         TokenStream result = new LowerCaseFilter(src);
         result = new EnglishPossessiveFilter(result);
-        
+
+//INVOKING SYN MAP
+        result= new FlattenGraphFilter(new SynonymGraphFilter(result, createSynonymMap(), true));
+
+//INVOKING SYN MAP
         //result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
-        
+
         CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
         result = new StopFilter(result, custom_stopwords);
-        
-        
+
+
         if(stemmer == "Porter") {
-        	result = new PorterStemFilter(result);
-        	System.out.println("Using Porter Stemming");
-        	
+                result = new PorterStemFilter(result);
+                System.out.println("Using Porter Stemming");
+
         } else if(stemmer == "KStem") {
-        	result = new KStemFilter(result);
-        	System.out.println("Using KStem Stemming");
-        	
+                result = new KStemFilter(result);
+                System.out.println("Using KStem Stemming");
+
         } else if (stemmer == "Snowball") {
-        	
-        	result = new SnowballFilter(result, "English");
-        	System.out.println("Using Snowball Stemming");
+
+                result = new SnowballFilter(result, "English");
+                System.out.println("Using Snowball Stemming");
         }
 
         //result = new ShingleFilter(result);
@@ -72,4 +113,3 @@ public class MyCustomAnalyzer extends Analyzer {
         return new TokenStreamComponents(src, result);
     }
 }
-
