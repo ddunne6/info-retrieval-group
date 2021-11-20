@@ -21,6 +21,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 
 import org.jsoup.Jsoup;
@@ -52,7 +53,7 @@ public class CreateQuery {
 		org.jsoup.nodes.Document doc = Jsoup.parse(topicsFile, "UTF-8", "");
 		topics = doc.body().select("top");
 
-		QueryParser parser = new QueryParser("content", new MyCustomAnalyzer());
+		QueryParser parser = new QueryParser("content", new EnglishAnalyzer());
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
 
 		// Iterate through topic tags & structure queries
@@ -107,24 +108,26 @@ public class CreateQuery {
 			//System.out.println(fullDescriptionForQuery);
 			
 			// Term Constructor --> new Term(field, text)
-			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
-
-			newBooleanQuery.add(new TermQuery(new Term(CONTENT, title)), BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(new TermQuery(new Term(CONTENT, description)), BooleanClause.Occur.SHOULD);
+			Query q1 = new TermQuery(new Term(CONTENT, title));
+			Query q2 = new TermQuery(new Term(CONTENT, fullDescriptionForQuery));
 			
-			Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
+			String forOther = newNarr + " " + title + " " + description;
+			Query testOther = new TermQuery(new Term(OTHER, forOther));
+			Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
+			//Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
 
 			Query boostedQ1 = new BoostQuery(q1, 1.5F);
 			Query boostedQ2 = new BoostQuery(q2, 2.5F);
 			Query boostedOther = new BoostQuery(testOther, 2.5F);
+			Query boostedTestOtherForTitle = new BoostQuery(testOtherForTitle, 2.5F);
 			//Query boostedMustNot = new BoostQuery(mustNotQuery, 1.5F);
 
-			//newBooleanQuery.add(new TermQuery(new Term(TITLE, title)), BooleanClause.Occur.SHOULD);
-			//newBooleanQuery.add(new TermQuery(new Term(CONTENT, fullDescriptionForQuery)), BooleanClause.Occur.SHOULD);
+			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
 			
 			newBooleanQuery.add(boostedQ1, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedQ2, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedOther, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(boostedTestOtherForTitle, BooleanClause.Occur.SHOULD);
 			//newBooleanQuery.add(mustNotQuery, BooleanClause.Occur.MUST_NOT);
 			
 			Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
