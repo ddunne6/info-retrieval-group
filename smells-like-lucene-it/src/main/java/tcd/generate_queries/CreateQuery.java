@@ -33,7 +33,7 @@ public class CreateQuery {
 	private static String indexDir = "../index_corpus";
 	private static final int MAX_RESULTS = 1000;
 	
-	public void queryTopics() throws IOException, ParseException{
+	public void queryTopics() throws IOException, ParseException {
 
 		// set up file writer for query results
 		File resultsFile = new File("../results_file");
@@ -72,7 +72,7 @@ public class CreateQuery {
 	
 			// Term Constructor --> new Term(field, text)
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
-			newBooleanQuery.add(new TermQuery(new Term(TITLE, title)), BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(new TermQuery(new Term(CONTENT, title)), BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(new TermQuery(new Term(CONTENT, description)), BooleanClause.Occur.SHOULD);
 			
 			Query newQuery = parser.parse(newBooleanQuery.build().toString());

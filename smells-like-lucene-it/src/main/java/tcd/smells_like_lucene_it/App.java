@@ -16,17 +16,26 @@ import org.apache.lucene.queryparser.classic.ParseException;
 
 
 public class App {
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) {
 		if(args.length < 1) {
 			
-			generateQueries();
+			try {
+				generateQueries();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else {
 			if("index".equals(args[0])) {
 				
 				File directory = new File(INDEX_DIRECTORY_CORPUS);
 				if (!directory.exists()) {
-					parseAndIndexCorpus();
+					try {
+						parseAndIndexCorpus();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				} else {
 					// Index Already Created
 					System.out.println("Index already created. Delete index directory at '"+INDEX_DIRECTORY_CORPUS+"' to allow re-indexing.");
@@ -34,7 +43,12 @@ public class App {
 				
 			}
 			else if("query".equals(args[0])) {
-				generateQueries();
+				try {
+					generateQueries();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else {
 				System.out.println("Invalid arguments");
@@ -54,7 +68,7 @@ public class App {
 
 		// Clear temporary folder
 		clearTempDirectory(new File(TEMP_FOLDER));
-		CreateIndex CI = new CreateIndex();
+		CreateIndexDavid CI = new CreateIndexDavid();
 		List<CustomDocument> documents = new ArrayList<CustomDocument>();
 
 		System.out.println("STARTING Parsing and Indexing...");
