@@ -123,7 +123,6 @@ public class CreateQuery {
 			//Query boostedMustNot = new BoostQuery(mustNotQuery, 1.5F);
 
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
-			
 			newBooleanQuery.add(boostedQ1, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedQ2, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedOther, BooleanClause.Occur.SHOULD);
