@@ -2,6 +2,7 @@ package tcd.analyzers;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Analyzer.TokenStreamComponents;
+import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
@@ -14,6 +15,7 @@ import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import tcd.constants.Custom_StopWords;
 
 // Adapted from https://www.baeldung.com/lucene-analyzers
 
@@ -44,8 +46,13 @@ public class MyCustomAnalyzer extends Analyzer {
         StandardTokenizer src = new StandardTokenizer();
         TokenStream result = new LowerCaseFilter(src);
         result = new EnglishPossessiveFilter(result);
-        result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
-              
+        
+        //result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
+        
+        CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
+        result = new StopFilter(result, custom_stopwords);
+        
+        
         if(stemmer == "Porter") {
         	result = new PorterStemFilter(result);
         	System.out.println("Using Porter Stemming");
