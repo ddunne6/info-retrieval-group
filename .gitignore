@@ -30,6 +30,7 @@ smells-like-lucene-it/temp-sgml-to-xml/
 
 # Index
 index_corpus/
+index/
 
 # Target
 smells-like-lucene-it/target/
@@ -37,4 +38,5 @@ smells-like-lucene-it/target/maven-status/
 
 
 # Results file
+results/
 results_file

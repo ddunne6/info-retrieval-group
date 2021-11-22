@@ -15,19 +15,35 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+
+import tcd.analyzers.MyCustomAnalyzer;
 
 public class CreateIndexDavid {
 	private Directory directory;
 	private IndexWriterConfig config;
 	private IndexWriter iwriter;
+	private String runIndex = INDEX_DIRECTORY_CORPUS;
+	private Similarity indexSimilarity = new BM25Similarity();
 	
-	public CreateIndexDavid() throws IOException {
-		directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY_CORPUS));
+	
+	public CreateIndexDavid(String runName, Similarity runSimilarity) throws IOException {
 		
-		config = new IndexWriterConfig(new EnglishAnalyzer());
+		this.runIndex = runIndex+runName;
+		this.indexSimilarity = runSimilarity;
+
+		directory = FSDirectory.open(Paths.get(runIndex));
+		
+		config = new IndexWriterConfig(new MyCustomAnalyzer());
+		//config = new IndexWriterConfig(new EnglishAnalyzer());
+		config.setSimilarity(indexSimilarity);
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        
+        System.out.println("Index directory: "+directory.toString());
+        System.out.println("Similarity: "+config.getSimilarity());
         
         iwriter = new IndexWriter(directory, config);
 	}
@@ -46,7 +62,7 @@ public class CreateIndexDavid {
 			iwriter.addDocuments(indexedDocuments);
 			indexedDocuments.clear();
 		}
-		System.out.println("INDEXED Documents");
+		//System.out.println("INDEXED Documents");
 	}
 	
 	public void closeIndex() {

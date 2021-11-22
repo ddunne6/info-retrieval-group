@@ -16,9 +16,12 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.document.Document;
+
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -26,30 +29,41 @@ import org.jsoup.select.Elements;
 
 import tcd.analyzers.MyCustomAnalyzer;
 import static tcd.constants.QueryConstants.*;
+import static tcd.constants.FilePathPatterns.*;
 
 public class CreateQuery {
 	private static File topicsFile = new File("../topics");
 	private static Elements topics;
-	private static String indexDir = "../index_corpus";
+	private String indexDir = INDEX_DIRECTORY_CORPUS;
 	private static final int MAX_RESULTS = 1000;
+	private String runName="";
+	private Similarity runSimilarity = new BM25Similarity();
+	
+	public CreateQuery(String runName, Similarity runSimilarity) {
+		this.runName=runName;
+		this.runSimilarity = runSimilarity;
+		this.indexDir = INDEX_DIRECTORY_CORPUS+runName;
+
+	}
 	
 	public void queryTopics() throws IOException, ParseException {
 
 		// set up file writer for query results
-		File resultsFile = new File("../results_file");
+		File resultsFile = new File("../results/results_file"+runName);
         FileWriter fileWriter = new FileWriter(resultsFile);
 		
 		// set directory, directory reader & index searcher
 		Directory directory = FSDirectory.open(Paths.get(indexDir));
 		DirectoryReader ireader = DirectoryReader.open(directory);
 		IndexSearcher isearcher = new IndexSearcher(ireader);		
-		isearcher.setSimilarity(new BM25Similarity());
+		isearcher.setSimilarity(runSimilarity);
 
 		// Parse topics file with Jsoup & select topic tags
 		org.jsoup.nodes.Document doc = Jsoup.parse(topicsFile, "UTF-8", "");
 		topics = doc.body().select("top");
 
 		QueryParser parser = new QueryParser("content", new MyCustomAnalyzer());
+		//QueryParser parser = new QueryParser("content", new EnglishAnalyzer());
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
 
 		// Iterate through topic tags & structure queries
@@ -87,11 +101,11 @@ public class CreateQuery {
                 //append query results to results file
                 Document hitDoc = isearcher.doc(hits[i].doc);
                 String appendToResults = queryId + " Q0 " + hitDoc.get(DOCID) + " " + rank + " " + hits[i].score + " STANDARD\n";
-                System.out.println(appendToResults);
+                //System.out.println(appendToResults);
 				fileWriter.write(appendToResults);
             }
     	}
 		fileWriter.close();
-    	System.out.println("Querying Done ");
+    	//System.out.println("Querying Done ");
 	}
 }

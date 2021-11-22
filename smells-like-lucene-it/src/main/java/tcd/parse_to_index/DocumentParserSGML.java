@@ -56,14 +56,14 @@ public class DocumentParserSGML {
 	}
 	
 	public List<CustomDocument> parseFTLA(String filePath) {
-		System.out.println("STARTED Parsing file >>> " + filePath);
+		//System.out.println("STARTED Parsing file >>> " + filePath);
 		String fileAsXML = decorateFileToXML(filePath);
-		System.out.println("FINISHED Parsing file >>> " + filePath);
+		//System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);
 	}
 	
 	public List<CustomDocument> parseFBIS(String filePath) {
-		System.out.println("STARTED Parsing file >>> " + filePath);
+		//System.out.println("STARTED Parsing file >>> " + filePath);
 		String fileAsXML = decorateFileToXML(filePath);
 		FileDecorator fileDecorator = new FileDecorator(fileAsXML);
 		fileDecorator.replaceAll("&\\w+", "");
@@ -73,18 +73,18 @@ public class DocumentParserSGML {
 		fileDecorator.replaceAll("<\\d>", "<digit>");
 		fileDecorator.replaceAll("</\\d>", "</digit>");
 		fileDecorator.decorate();
-		System.out.println("FINISHED Parsing file >>> " + filePath);
+		//System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);
 	}
 
 	public List<CustomDocument> parseFR(String filePath) {
-		System.out.println("STARTED Parsing file >>> " + filePath);
+		//System.out.println("STARTED Parsing file >>> " + filePath);
 		String fileAsXML = decorateFileToXML(filePath);
 		FileDecorator fileDecorator = new FileDecorator(fileAsXML);
 		fileDecorator.replaceAll("&\\w+", "");
 		fileDecorator.replaceAll("&", "");
 		fileDecorator.decorate();
-		System.out.println("FINISHED Parsing file >>> " + filePath);
+		//System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);
 	}
 	
