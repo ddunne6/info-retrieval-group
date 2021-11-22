@@ -87,7 +87,7 @@ public class App {
 							}
 					
 							
-							clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
+							//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
 					}	
 				}
 			}

@@ -32,7 +32,7 @@ public class CreateIndexDavid {
 	
 	public CreateIndexDavid(String runName, Similarity runSimilarity) throws IOException {
 		
-		this.runIndex = runIndex+runName;
+		//this.runIndex = runIndex+runName;
 		this.indexSimilarity = runSimilarity;
 
 		directory = FSDirectory.open(Paths.get(runIndex));
