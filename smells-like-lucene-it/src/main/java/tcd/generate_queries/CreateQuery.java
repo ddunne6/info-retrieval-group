@@ -42,7 +42,7 @@ public class CreateQuery {
 	public CreateQuery(String runName, Similarity runSimilarity) {
 		this.runName=runName;
 		this.runSimilarity = runSimilarity;
-		this.indexDir = INDEX_DIRECTORY_CORPUS+runName;
+		//this.indexDir = INDEX_DIRECTORY_CORPUS+runName;
 
 	}
 	
