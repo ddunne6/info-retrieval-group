@@ -36,7 +36,6 @@ import static tcd.constants.FilePathPatterns.*;
 public class CreateQuery {
 	private static File topicsFile = new File("../topics");
 	private static Elements topics;
-	private static String indexDir = INDEX_DIRECTORY_CORPUS;
 	private static final int MAX_RESULTS = 1000;
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity();
@@ -54,7 +53,7 @@ public class CreateQuery {
         FileWriter fileWriter = new FileWriter(resultsFile);
 		
 		// set directory, directory reader & index searcher
-		Directory directory = FSDirectory.open(Paths.get(indexDir));
+		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY_CORPUS));
 		DirectoryReader ireader = DirectoryReader.open(directory);
 		IndexSearcher isearcher = new IndexSearcher(ireader);		
 		isearcher.setSimilarity(runSimilarity);
