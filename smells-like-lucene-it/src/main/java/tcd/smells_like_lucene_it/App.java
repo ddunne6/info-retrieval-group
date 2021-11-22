@@ -130,7 +130,7 @@ public class App {
 		}
 
 		// Parse Foreign Broadcast Information Service
-		System.out.println("Parsing FBU documents");
+		System.out.println("Parsing FBIS documents");
 		for (String fileName : foreignBroadcastISFiles) {
 			
 			DocumentParserSGML documentParser = new DocumentParserSGML();
