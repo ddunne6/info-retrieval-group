@@ -44,14 +44,13 @@ public class MyCustomAnalyzer extends Analyzer {
 	@Override
 	protected TokenStreamComponents createComponents(String fieldName) {
         StandardTokenizer src = new StandardTokenizer();
-        TokenStream result = new LowerCaseFilter(src);
-        result = new EnglishPossessiveFilter(result);
-        
-        //result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
-        
-        CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
-        result = new StopFilter(result, custom_stopwords);
-        
+        TokenStream result = new EnglishPossessiveFilter(src);
+        result = new LowerCaseFilter(result);
+        result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
+      
+        //CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
+        //result = new StopFilter(result, custom_stopwords);
+
         
         if(stemmer == "Porter") {
         	result = new PorterStemFilter(result);

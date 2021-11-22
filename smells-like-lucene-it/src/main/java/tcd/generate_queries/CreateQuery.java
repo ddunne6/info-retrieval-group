@@ -19,6 +19,7 @@ import org.apache.lucene.search.BoostQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -30,24 +31,32 @@ import org.jsoup.select.Elements;
 
 import tcd.analyzers.MyCustomAnalyzer;
 import static tcd.constants.QueryConstants.*;
+import static tcd.constants.FilePathPatterns.*;
 
 public class CreateQuery {
 	private static File topicsFile = new File("../topics");
 	private static Elements topics;
-	private static String indexDir = "../index_corpus";
 	private static final int MAX_RESULTS = 1000;
+	private String runName="";
+	private Similarity runSimilarity = new BM25Similarity();
+	
+	public CreateQuery(String runName, Similarity runSimilarity) {
+		this.runName=runName;
+		this.runSimilarity = runSimilarity;
+		
+	}
 	
 	public void queryTopics() throws IOException, ParseException {
 
 		// set up file writer for query results
-		File resultsFile = new File("../results_file");
+		File resultsFile = new File("../results/results_file"+runName);
         FileWriter fileWriter = new FileWriter(resultsFile);
 		
 		// set directory, directory reader & index searcher
-		Directory directory = FSDirectory.open(Paths.get(indexDir));
+		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY_CORPUS));
 		DirectoryReader ireader = DirectoryReader.open(directory);
 		IndexSearcher isearcher = new IndexSearcher(ireader);		
-		isearcher.setSimilarity(new BM25Similarity());
+		isearcher.setSimilarity(runSimilarity);
 
 		// Parse topics file with Jsoup & select topic tags
 		org.jsoup.nodes.Document doc = Jsoup.parse(topicsFile, "UTF-8", "");
@@ -116,6 +125,7 @@ public class CreateQuery {
 			Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
 			//Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
 
+
 			Query boostedQ1 = new BoostQuery(q1, 1.5F);
 			Query boostedQ2 = new BoostQuery(q2, 2.5F);
 			Query boostedOther = new BoostQuery(testOther, 2.5F);
@@ -141,7 +151,7 @@ public class CreateQuery {
                 //append query results to results file
                 Document hitDoc = isearcher.doc(hits[i].doc);
                 String appendToResults = queryId + " Q0 " + hitDoc.get(DOCID) + " " + rank + " " + hits[i].score + " STANDARD\n";
-                System.out.println(appendToResults);
+                //System.out.println(appendToResults);
 				fileWriter.write(appendToResults);
             }
     	}

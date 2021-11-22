@@ -13,9 +13,16 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.Similarity;
 
 
 public class App {
+	
+	private static String runName = "";
+	private static Similarity runSimilarity = new BM25Similarity();;
+
+
 	public static void main(String[] args) {
 		if(args.length < 1) {
 			
@@ -50,6 +57,40 @@ public class App {
 					e.printStackTrace();
 				}
 			}
+			else if("analyze-similarity".equals(args[0])) {
+				
+				
+				System.out.println("Analyzing BM25 Similarity");
+				
+				float[] k1Array = {0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f,1.1f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f, 1.9f, 2.0f};
+				float[] bArray = {0.3f, 0.35f, 0.4f, 0.45f, 0.5f, 0.55f, 0.6f, 0.65f, 0.7f, 0.75f, 0.8f, 0.85f, 0.9f, 0.95f, 1.0f};
+				
+				for(float k1param : k1Array) {
+					for (float bparam : bArray) {
+						
+
+						runSimilarity = new BM25Similarity(k1param, bparam);
+						runName = "_BM25_k1_"+k1param+"_b_"+bparam;
+						System.out.println(runName);
+							
+							try {
+								parseAndIndexCorpus();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							
+							try {
+								generateQueries();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+					
+							
+							//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
+					}	
+				}
+			}
 			else {
 				System.out.println("Invalid arguments");
 			}
@@ -68,11 +109,12 @@ public class App {
 
 		// Clear temporary folder
 		clearTempDirectory(new File(TEMP_FOLDER));
-		CreateIndexDavid CI = new CreateIndexDavid();
+		CreateIndexDavid CI = new CreateIndexDavid(runName, runSimilarity);
 		List<CustomDocument> documents = new ArrayList<CustomDocument>();
 
 		System.out.println("STARTING Parsing and Indexing...");
 		// Parse Financial Times
+		System.out.println("Parsing Financial Times");
 		for (String fileName : financialTimesFiles) {
 			DocumentParserSGML documentParser = new DocumentParserSGML();
 			documents = documentParser.parseFTLA(fileName);
@@ -80,6 +122,7 @@ public class App {
 		}
 
 		// Parse Federal Register
+		System.out.println("Parsing Federal Register");
 		for (String fileName : federalRegisterFiles) {
 			DocumentParserSGML documentParser = new DocumentParserSGML();
 			documents = documentParser.parseFR(fileName);
@@ -87,13 +130,16 @@ public class App {
 		}
 
 		// Parse Foreign Broadcast Information Service
+		System.out.println("Parsing FBIS documents");
 		for (String fileName : foreignBroadcastISFiles) {
+			
 			DocumentParserSGML documentParser = new DocumentParserSGML();
 			documents = documentParser.parseFBIS(fileName);
 			CI.indexCorpus(documents);
 		}
 
 		// Parse Los Angeles Times
+		System.out.println("Parsing LA Times documents");
 		for (String fileName : losAngelosTimesFiles) {
 			DocumentParserSGML documentParser = new DocumentParserSGML();
 			documents = documentParser.parseFTLA(fileName);
@@ -107,7 +153,7 @@ public class App {
 	}
 	
 	private static void generateQueries() throws IOException, ParseException {
-		CreateQuery createQuery = new CreateQuery();
+		CreateQuery createQuery = new CreateQuery(runName, runSimilarity);
 		createQuery.queryTopics();
 	}
 
