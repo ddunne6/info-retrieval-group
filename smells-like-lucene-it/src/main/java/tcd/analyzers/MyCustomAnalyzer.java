@@ -47,9 +47,7 @@ public class MyCustomAnalyzer extends Analyzer {
         TokenStream result = new EnglishPossessiveFilter(src);
         result = new LowerCaseFilter(result);
         result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
-             
-        //result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
-        
+      
         //CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
         //result = new StopFilter(result, custom_stopwords);
 
