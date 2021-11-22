@@ -63,7 +63,7 @@ public class CreateQuery {
 		org.jsoup.nodes.Document doc = Jsoup.parse(topicsFile, "UTF-8", "");
 		topics = doc.body().select("top");
 
-		QueryParser parser = new QueryParser("content", new MyCustomAnalyzer());
+		QueryParser parser = new QueryParser("content", new EnglishAnalyzer());
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
 
 		// Iterate through topic tags & structure queries
@@ -125,6 +125,7 @@ public class CreateQuery {
 			Query testOther = new TermQuery(new Term(OTHER, forOther));
 			Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
 			//Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
+
 
 			Query boostedQ1 = new BoostQuery(q1, 1.5F);
 			Query boostedQ2 = new BoostQuery(q2, 2.5F);
