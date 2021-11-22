@@ -26,7 +26,6 @@ public class CreateIndexDavid {
 	private Directory directory;
 	private IndexWriterConfig config;
 	private IndexWriter iwriter;
-	private String runIndex = INDEX_DIRECTORY_CORPUS;
 	private Similarity indexSimilarity = new BM25Similarity();
 	
 	
@@ -35,7 +34,7 @@ public class CreateIndexDavid {
 		//this.runIndex = runIndex+runName;
 		this.indexSimilarity = runSimilarity;
 
-		directory = FSDirectory.open(Paths.get(runIndex));
+		directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY_CORPUS));
 		
 		config = new IndexWriterConfig(new MyCustomAnalyzer());
 		//config = new IndexWriterConfig(new EnglishAnalyzer());
