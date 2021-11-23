@@ -25,6 +25,7 @@ import org.apache.lucene.store.FSDirectory;
 import tcd.analyzers.MyCustomAnalyzer;
 import static tcd.constants.QueryConstants.*;
 
+@Deprecated
 // Create index using objects from DocumentParser.parse()
 public class CreateIndex {
 	
