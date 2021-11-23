@@ -24,6 +24,7 @@ hs_err_pid*
 
 # Assignment 2 documents
 Assignment\ Two/
+Assignment_Two/
 
 # Temporary folder
 smells-like-lucene-it/temp-sgml-to-xml/
@@ -38,5 +39,6 @@ smells-like-lucene-it/target/maven-status/
 
 
 # Results file
-results/
+results/*
+!results/.placeholder
 results_file

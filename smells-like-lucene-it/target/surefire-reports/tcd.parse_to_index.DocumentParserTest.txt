@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: tcd.parse_to_index.DocumentParserTest
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.092 s - in tcd.parse_to_index.DocumentParserTest

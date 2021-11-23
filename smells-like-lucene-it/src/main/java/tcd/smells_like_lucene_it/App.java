@@ -109,7 +109,7 @@ public class App {
 
 		// Clear temporary folder
 		clearTempDirectory(new File(TEMP_FOLDER));
-		CreateIndexDavid CI = new CreateIndexDavid(runName, runSimilarity);
+		CreateIndexSimple createIndex = new CreateIndexSimple(runName, runSimilarity);
 		List<CustomDocument> documents = new ArrayList<CustomDocument>();
 
 		System.out.println("STARTING Parsing and Indexing...");
@@ -118,7 +118,7 @@ public class App {
 		for (String fileName : financialTimesFiles) {
 			DocumentParserSGML documentParser = new DocumentParserSGML();
 			documents = documentParser.parseFTLA(fileName);
-			CI.indexCorpus(documents);
+			createIndex.indexCorpus(documents);
 		}
 
 		// Parse Federal Register
@@ -126,7 +126,7 @@ public class App {
 		for (String fileName : federalRegisterFiles) {
 			DocumentParserSGML documentParser = new DocumentParserSGML();
 			documents = documentParser.parseFR(fileName);
-			CI.indexCorpus(documents);
+			createIndex.indexCorpus(documents);
 		}
 
 		// Parse Foreign Broadcast Information Service
@@ -135,7 +135,7 @@ public class App {
 			
 			DocumentParserSGML documentParser = new DocumentParserSGML();
 			documents = documentParser.parseFBIS(fileName);
-			CI.indexCorpus(documents);
+			createIndex.indexCorpus(documents);
 		}
 
 		// Parse Los Angeles Times
@@ -143,11 +143,11 @@ public class App {
 		for (String fileName : losAngelosTimesFiles) {
 			DocumentParserSGML documentParser = new DocumentParserSGML();
 			documents = documentParser.parseFTLA(fileName);
-			CI.indexCorpus(documents);
+			createIndex.indexCorpus(documents);
 		}
 
 		// Commit changes and close everything
-		CI.closeIndex();
+		createIndex.closeIndex();
 
 		System.out.println("Parsing and Indexing COMPLETE");
 	}
