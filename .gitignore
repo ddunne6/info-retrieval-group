@@ -39,5 +39,5 @@ smells-like-lucene-it/target/maven-status/
 
 
 # Results file
-results/
+results/*
 results_file
