@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class FilePathPatterns {
-	public static final String PATH_TO_MEDIA = "../Assignment Two/Assignment Two/";
+	public static final String PATH_TO_MEDIA = "../Assignment_Two/Assignment_Two/";
 	public static final String TEMP_FOLDER = "temp-sgml-to-xml/";
 	public static final String INDEX_DIRECTORY_CORPUS = "../index/index_corpus";
 
