@@ -22,14 +22,14 @@ import org.apache.lucene.store.FSDirectory;
 
 import tcd.analyzers.MyCustomAnalyzer;
 
-public class CreateIndexDavid {
+public class CreateIndexSimple {
 	private Directory directory;
 	private IndexWriterConfig config;
 	private IndexWriter iwriter;
 	private Similarity indexSimilarity = new BM25Similarity();
 	
 	
-	public CreateIndexDavid(String runName, Similarity runSimilarity) throws IOException {
+	public CreateIndexSimple(String runName, Similarity runSimilarity) throws IOException {
 		
 		//this.runIndex = runIndex+runName;
 		this.indexSimilarity = runSimilarity;

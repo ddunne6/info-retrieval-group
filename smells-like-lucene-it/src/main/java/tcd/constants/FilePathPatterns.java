@@ -1,15 +1,11 @@
 package tcd.constants;
 
-import static tcd.constants.FilePathPatterns.FT_PATTERNS;
-import static tcd.constants.FilePathPatterns.getFinancialTimesFile;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public final class FilePathPatterns {
 	public static final String PATH_TO_MEDIA = "../Assignment Two/Assignment Two/";
