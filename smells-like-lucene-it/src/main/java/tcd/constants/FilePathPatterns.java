@@ -96,9 +96,8 @@ public final class FilePathPatterns {
 		for (int i=0; i<directoryFiles.size() ; i++) {
 			directoryFiles.set(i, folderPath + directoryFiles.get(i));
 		}
-		// Remove readme files
-		directoryFiles.remove(directoryFiles.size() - 1);
-		directoryFiles.remove(directoryFiles.size() - 1);
+		
+		directoryFiles = removeReadMeFiles(directoryFiles);
 		return directoryFiles;
 	}
 	
@@ -109,9 +108,17 @@ public final class FilePathPatterns {
 		for (int i=0; i<directoryFiles.size() ; i++) {
 			directoryFiles.set(i, folderPath + directoryFiles.get(i));
 		}
-		// Remove readme files
-		directoryFiles.remove(directoryFiles.size() - 1);
-		directoryFiles.remove(directoryFiles.size() - 1);
+
+		directoryFiles = removeReadMeFiles(directoryFiles);
+		return directoryFiles;
+	}
+	
+	private static List<String> removeReadMeFiles(List<String> directoryFiles) {
+		for(String fileName: new ArrayList<String>(directoryFiles)) {
+			if (fileName.contains("read") && fileName.contains(".txt")) {
+				directoryFiles.remove(fileName);
+			}
+		}
 		return directoryFiles;
 	}
 
