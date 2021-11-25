@@ -1,4 +1,4 @@
-package tcd.analyzers;
+package tcd.mappings;
 
 import org.apache.lucene.analysis.synonym.SolrSynonymParser;
 import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
@@ -14,8 +14,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class MySynonymMap{
-    //Adding a synonym Map function (checking)
-    private static SynonymMap createSynonymMap() throws FileNotFoundException {
+    // UK/US synonyms from http://www.tysto.com/uk-us-spelling-list.html
+    // Capitals: https://www.countries-ofthe-world.com/capitals-of-the-world.html
+    public SynonymMap createSynonymMap() throws FileNotFoundException {
         SynonymMap synMap = new SynonymMap(null, null, 0);
         Scanner readInput = new Scanner(new File("../capitals.txt"));
         Scanner input2 = new Scanner(new File("../uk_us.txt"));
@@ -26,8 +27,16 @@ public class MySynonymMap{
         	while(readInput.hasNext()){
                 String[] capitalAndCountry = readInput.nextLine().split(" ");
                 //System.out.println(Arrays.toString(capitalAndCountry));
-                builder.add(new CharsRef(capitalAndCountry[0]), new CharsRef(capitalAndCountry[1]), true);
-                builder.add(new CharsRef(capitalAndCountry[1]), new CharsRef(capitalAndCountry[0]), true);   
+                String output = "";
+                if(capitalAndCountry.length == 3) {
+                	output = capitalAndCountry[1] + " " + capitalAndCountry[2];
+                	//System.out.println(output);
+                }
+                else {
+                	output = capitalAndCountry[1];
+                }
+                builder.add(new CharsRef(capitalAndCountry[0]), new CharsRef(output), true);
+                builder.add(new CharsRef(output), new CharsRef(capitalAndCountry[0]), true);   
             }
             while(input2.hasNext()){
                 String[] ukAndUsMapping = input2.nextLine().split(" ");
@@ -37,12 +46,8 @@ public class MySynonymMap{
         	synMap = builder.build();
             
         } catch (Exception e) {
-                System.out.println("ERROR: " + e.getLocalizedMessage());
+                e.printStackTrace();
         }
         return synMap;
-    }
-
-    public static void main(String[] args) throws FileNotFoundException{
-    	System.out.print(createSynonymMap());
     }
 }
