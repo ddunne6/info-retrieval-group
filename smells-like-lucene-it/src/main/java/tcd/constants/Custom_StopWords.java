@@ -17,7 +17,7 @@ import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;  
 public class Custom_StopWords {
-	private   final static Path currentRelativePath = Paths.get("").toAbsolutePath();
+	private   final static String currentRelativePath = Paths.get("").toAbsolutePath()+"/STOPWORD_LIST.xlsx";
 	static List<String>  stopWords_list =new ArrayList<String>(); 
 	static String[] exception;
 	// throws EncryptedDocumentException, IOException
@@ -27,7 +27,7 @@ public  static String[] getStopWords(float threshold) {
 		//Currently made of words that appear in more than 70% of the documents
 		
 		//Workbook wb = WorkbookFactory.create(new File("C:\\Users\\Saubhagya\\Desktop\\sample-code\\STOPWORD_LIST.xlsx"));
-		 Workbook wb = WorkbookFactory.create(new File(currentRelativePath+"/STOPWORD_LIST.xlsx"));
+		 Workbook wb = WorkbookFactory.create(new File(currentRelativePath));
 		 DataFormatter df = new DataFormatter();
 		 String[] list_stopWords = null;
 	   	 Sheet s = wb.getSheetAt(0);
@@ -58,22 +58,6 @@ public  static String[] getStopWords(float threshold) {
 	}
 		
 	}
-
-//public static void main(String []args) 
-
-//{
-//	try {
-//	System.out.println(Arrays.asList(getStopWords(90)));
-//	}catch (Exception e) {
-//		System.out.println(Arrays.asList(getStopWords(90)));
-//	}
-	
-//}
-
-
-
-
-
 	
 }
 
