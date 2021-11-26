@@ -1,4 +1,4 @@
-package tcd.parse_to_index;
+package tcd.index;
 
 import static tcd.constants.FilePathPatterns.INDEX_DIRECTORY_CORPUS;
 import static tcd.constants.QueryConstants.DOCID;
@@ -21,6 +21,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import tcd.analyzers.MyCustomAnalyzer;
+import tcd.parse.CustomDocument;
+import tcd.parse.CustomTag;
 
 public class CreateIndexSimple {
 	private Directory directory;

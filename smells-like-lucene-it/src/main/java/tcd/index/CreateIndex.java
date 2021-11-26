@@ -1,4 +1,4 @@
-package tcd.parse_to_index;
+package tcd.index;
 import static tcd.constants.FilePathPatterns.*;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -23,6 +23,9 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import tcd.analyzers.MyCustomAnalyzer;
+import tcd.parse.CustomDocument;
+import tcd.parse.CustomTag;
+
 import static tcd.constants.QueryConstants.*;
 
 @Deprecated
