@@ -10,6 +10,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import tcd.parse.CustomDocument;
+import tcd.parse.CustomTag;
+import tcd.parse.DocumentParserSGML;
+
 public class DocumentParserTest {
 	DocumentParserSGML documentParser;
 	List<CustomDocument> ft911docs, ft934docs, fr940104docs;

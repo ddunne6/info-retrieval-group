@@ -1,4 +1,4 @@
-package tcd.parse_to_index;
+package tcd.parse;
 
 public class ReplaceTerm {
 	private String replaceFrom;

@@ -6,11 +6,16 @@ import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
+<<<<<<< HEAD
 import org.apache.lucene.analysis.core.FlattenGraphFilter;
+=======
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
+>>>>>>> 97989ee819649b749217a743dc5792dae681ae08
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
 import org.apache.lucene.analysis.en.KStemFilter;
 import org.apache.lucene.analysis.en.PorterStemFilter;
+import org.apache.lucene.analysis.hunspell.HunspellStemFilter;
 import org.apache.lucene.analysis.miscellaneous.CapitalizationFilter;
 import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
@@ -23,6 +28,8 @@ import java.io.FileNotFoundException;
 
 import tcd.constants.Custom_StopWords;
 import tcd.mappings.MySynonymMap;
+
+import static tcd.constants.Dictionaries.*;
 
 // Adapted from https://www.baeldung.com/lucene-analyzers
 
@@ -50,7 +57,7 @@ public class MyCustomAnalyzer extends Analyzer {
     
 	@Override
 	protected TokenStreamComponents createComponents(String fieldName) {
-        StandardTokenizer src = new StandardTokenizer();
+		StandardTokenizer src = new StandardTokenizer();
         TokenStream result = new EnglishPossessiveFilter(src);
         result = new LowerCaseFilter(result);
         
@@ -62,6 +69,7 @@ public class MyCustomAnalyzer extends Analyzer {
 			e.printStackTrace();
 		}
 
+		//result = new HunspellStemFilter(result, getUSDictionary()); Spell Checker -> Reduced MAP score marginally
         result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
       
         //CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
