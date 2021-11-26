@@ -6,11 +6,10 @@ import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
-<<<<<<< HEAD
+
 import org.apache.lucene.analysis.core.FlattenGraphFilter;
-=======
+
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
->>>>>>> 97989ee819649b749217a743dc5792dae681ae08
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
 import org.apache.lucene.analysis.en.KStemFilter;
