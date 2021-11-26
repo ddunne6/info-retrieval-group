@@ -18,7 +18,7 @@ public class MySynonymMap{
     // Capitals: https://www.countries-ofthe-world.com/capitals-of-the-world.html
     public SynonymMap createSynonymMap() throws FileNotFoundException {
         SynonymMap synMap = new SynonymMap(null, null, 0);
-        Scanner readInput = new Scanner(new File("../capitals.txt"));
+        Scanner readInput = new Scanner(new File("../new_capitals.txt"));
         Scanner input2 = new Scanner(new File("../uk_us.txt"));
 
         try {
