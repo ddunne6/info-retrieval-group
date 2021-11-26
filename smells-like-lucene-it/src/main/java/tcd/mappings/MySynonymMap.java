@@ -16,10 +16,12 @@ import java.io.FileNotFoundException;
 public class MySynonymMap{
     // UK/US synonyms from http://www.tysto.com/uk-us-spelling-list.html
     // Capitals: https://www.countries-ofthe-world.com/capitals-of-the-world.html
+    private static final String CITIES_FILE = "../cities.txt";
+    private static final String UK_US_FILE = "../uk_us.txt";
     public SynonymMap createSynonymMap() throws FileNotFoundException {
         SynonymMap synMap = new SynonymMap(null, null, 0);
-        Scanner readInput = new Scanner(new File("../new_capitals.txt"));
-        Scanner input2 = new Scanner(new File("../uk_us.txt"));
+        Scanner readInput = new Scanner(new File(CITIES_FILE));
+        Scanner input2 = new Scanner(new File(UK_US_FILE));
 
         try {
         	final SynonymMap.Builder builder = new SynonymMap.Builder(true);
@@ -36,12 +38,10 @@ public class MySynonymMap{
                 	output = capitalAndCountry[1];
                 }
                 builder.add(new CharsRef(capitalAndCountry[0]), new CharsRef(output), true);
-                builder.add(new CharsRef(output), new CharsRef(capitalAndCountry[0]), true);   
             }
             while(input2.hasNext()){
                 String[] ukAndUsMapping = input2.nextLine().split(" ");
                 builder.add(new CharsRef(ukAndUsMapping[0]), new CharsRef(ukAndUsMapping[1]), true);
-                builder.add(new CharsRef(ukAndUsMapping[1]), new CharsRef(ukAndUsMapping[0]), true);
             }
         	synMap = builder.build();
             
