@@ -6,6 +6,9 @@ import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
+
+import org.apache.lucene.analysis.core.FlattenGraphFilter;
+
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
@@ -17,7 +20,13 @@ import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
+import org.apache.lucene.analysis.synonym.SynonymMap;
+
+import java.io.FileNotFoundException;
+
 import tcd.constants.Custom_StopWords;
+import tcd.mappings.MySynonymMap;
 
 import static tcd.constants.Dictionaries.*;
 
@@ -50,8 +59,16 @@ public class MyCustomAnalyzer extends Analyzer {
 		StandardTokenizer src = new StandardTokenizer();
         TokenStream result = new EnglishPossessiveFilter(src);
         result = new LowerCaseFilter(result);
-        result = new LowerCaseFilter(result);
-        //result = new HunspellStemFilter(result, getUSDictionary()); Spell Checker -> Reduced MAP score marginally
+        
+        //Synonym Mapping
+        try {
+            MySynonymMap synMap = new MySynonymMap();
+			result = new FlattenGraphFilter(new SynonymGraphFilter(result, synMap.createSynonymMap(), true));
+	        } catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		//result = new HunspellStemFilter(result, getUSDictionary()); Spell Checker -> Reduced MAP score marginally
         result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
       
         //CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
