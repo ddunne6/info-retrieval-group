@@ -20,12 +20,12 @@ import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import tcd.constants.CustomStopWords;
 import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
 import org.apache.lucene.analysis.synonym.SynonymMap;
 
 import java.io.FileNotFoundException;
 
-import tcd.constants.Custom_StopWords;
 import tcd.mappings.MySynonymMap;
 
 import static tcd.constants.Dictionaries.*;
