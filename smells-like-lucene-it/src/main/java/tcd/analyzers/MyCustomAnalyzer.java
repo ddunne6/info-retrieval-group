@@ -15,7 +15,7 @@ import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
-import tcd.constants.Custom_StopWords;
+import tcd.constants.CustomStopWords;
 
 // Adapted from https://www.baeldung.com/lucene-analyzers
 
