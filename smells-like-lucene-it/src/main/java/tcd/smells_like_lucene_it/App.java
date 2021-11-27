@@ -3,7 +3,9 @@ package tcd.smells_like_lucene_it;
 import static tcd.constants.FilePathPatterns.*;
 
 import tcd.generate_queries.CreateQuery;
-import tcd.parse_to_index.*;
+import tcd.index.*;
+import tcd.parse.CustomDocument;
+import tcd.parse.DocumentParserSGML;
 
 import java.io.File;
 

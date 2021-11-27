@@ -6,16 +6,29 @@ import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
+
+import org.apache.lucene.analysis.core.FlattenGraphFilter;
+
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
 import org.apache.lucene.analysis.en.KStemFilter;
 import org.apache.lucene.analysis.en.PorterStemFilter;
+import org.apache.lucene.analysis.hunspell.HunspellStemFilter;
 import org.apache.lucene.analysis.miscellaneous.CapitalizationFilter;
 import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import tcd.constants.CustomStopWords;
+import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
+import org.apache.lucene.analysis.synonym.SynonymMap;
+
+import java.io.FileNotFoundException;
+
+import tcd.mappings.MySynonymMap;
+
+import static tcd.constants.Dictionaries.*;
 
 // Adapted from https://www.baeldung.com/lucene-analyzers
 
@@ -43,9 +56,19 @@ public class MyCustomAnalyzer extends Analyzer {
     
 	@Override
 	protected TokenStreamComponents createComponents(String fieldName) {
-        StandardTokenizer src = new StandardTokenizer();
+		StandardTokenizer src = new StandardTokenizer();
         TokenStream result = new EnglishPossessiveFilter(src);
         result = new LowerCaseFilter(result);
+        
+        //Synonym Mapping
+        try {
+            MySynonymMap synMap = new MySynonymMap();
+			result = new FlattenGraphFilter(new SynonymGraphFilter(result, synMap.createSynonymMap(), true));
+	        } catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		//result = new HunspellStemFilter(result, getUSDictionary()); Spell Checker -> Reduced MAP score marginally
         result = new StopFilter(result,  EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
       
         //CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
