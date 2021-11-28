@@ -41,16 +41,25 @@ public class CreateQuery {
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity();
 	private Float contentBoost = 1f;
+	private Float topicTitleBoost = 1f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
 		this.runName=runName;
 		this.runSimilarity = runSimilarity;		
 	}
 	
-	public CreateQuery(String runName, Similarity runSimilarity, Float contentBoost) {
+	public CreateQuery(String runName, Similarity runSimilarity, String boostString, Float customBoost) {
 		this.runName=runName;
 		this.runSimilarity = runSimilarity;
-		this.contentBoost = contentBoost;		
+		
+		if(boostString.equals(CONTENT)) {
+		System.out.println("Boosting Content Field");
+		this.contentBoost = customBoost;
+		
+		} else if(boostString.equals("topicTitle")) {		
+			
+			this.topicTitleBoost = customBoost;
+		}
 	}
 	
 	public void queryTopics() throws IOException, ParseException {
@@ -129,11 +138,11 @@ public class CreateQuery {
 			//System.out.println(fullDescriptionForQuery);
 			
 			
-			Query titlequery = multiqp.parse(title);
-			Query descriptionquery = multiqp.parse(description);
+			Query topicTitleQuery = multiqp.parse(title);
+			Query topicDescriptionQuery = multiqp.parse(description);
 			
-			Query boostedtitle = new BoostQuery(titlequery, 1);
-			Query boosteddescription = new BoostQuery(descriptionquery, 2);
+			Query boostedTopicTitle = new BoostQuery(topicTitleQuery, topicTitleBoost);
+			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, 1f);
 			
 			
 			// Term Constructor --> new Term(field, text)
@@ -159,8 +168,8 @@ public class CreateQuery {
 			//newBooleanQuery.add(boostedTestOtherForTitle, BooleanClause.Occur.SHOULD);
 			//newBooleanQuery.add(mustNotQuery, BooleanClause.Occur.MUST_NOT);
 			
-			newBooleanQuery.add(boostedtitle, BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(boosteddescription, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(boostedTopicTitle, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(boostedTopicDescription, BooleanClause.Occur.SHOULD);
 			
 			//Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
 			Query newQuery = newBooleanQuery.build();
