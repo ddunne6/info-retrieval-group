@@ -40,7 +40,7 @@ public class CreateQuery {
 	private static final int MAX_RESULTS = 1000;
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity();
-	private Float contentBoost = 1f;
+	private Float contentBoost = 5.35f;
 	private Float topicTitleBoost = 1f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
@@ -140,6 +140,7 @@ public class CreateQuery {
 			
 			Query topicTitleQuery = multiqp.parse(title);
 			Query topicDescriptionQuery = multiqp.parse(description);
+			//Query topicNarrativeQuery = multiqp.parse(narrative);
 			
 			Query boostedTopicTitle = new BoostQuery(topicTitleQuery, topicTitleBoost);
 			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, 1f);
