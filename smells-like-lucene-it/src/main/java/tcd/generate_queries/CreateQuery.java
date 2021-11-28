@@ -42,7 +42,7 @@ public class CreateQuery {
 	private Similarity runSimilarity = new BM25Similarity();
 	private Float contentBoost = 5.35f;
 	private Float titleBoost = 1f;
-	private Float topicTitleBoost = 1f;
+	private Float topicTitleBoost = 2.35f;
 	private Float topicDescriptionBoost = 1f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
