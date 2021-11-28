@@ -28,7 +28,7 @@ import org.apache.lucene.analysis.synonym.SynonymMap;
 import java.io.FileNotFoundException;
 
 import tcd.mappings.MySynonymMap;
-
+import tcd.constants.CustomStopWords;
 import static tcd.constants.Dictionaries.*;
 
 // Adapted from https://www.baeldung.com/lucene-analyzers
@@ -77,6 +77,9 @@ public class MyCustomAnalyzer extends Analyzer {
         
         //result = new EdgeNGramTokenFilter(result, 2); Terrible, MAP score of 0
         //result = new ShingleFilter(result, 2, 2); // Marginal drop in MAP, would be good to run after stopwords updated
+		
+	CharArraySet customStopwords = StopFilter.makeStopSet(CustomStopWords.getStopWords(20));
+        result = new StopFilter(result, customStopwords);
         
         if(stemmer == "Porter") {
         	result = new PorterStemFilter(result);
