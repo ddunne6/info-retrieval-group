@@ -3,6 +3,7 @@ package tcd.generate_queries;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.io.FileWriter;
 
 import org.apache.lucene.index.DirectoryReader;
@@ -39,11 +40,17 @@ public class CreateQuery {
 	private static final int MAX_RESULTS = 1000;
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity();
+	private Float contentBoost = 1f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
 		this.runName=runName;
+		this.runSimilarity = runSimilarity;		
+	}
+	
+	public CreateQuery(String runName, Similarity runSimilarity, Float contentBoost) {
+		this.runName=runName;
 		this.runSimilarity = runSimilarity;
-		
+		this.contentBoost = contentBoost;		
 	}
 	
 	public void queryTopics() throws IOException, ParseException {
@@ -63,6 +70,11 @@ public class CreateQuery {
 		topics = doc.body().select("top");
 
 		QueryParser parser = new QueryParser("content", new EnglishAnalyzer());
+		HashMap<String, Float> fieldBoosts = new HashMap<String, Float>(); 
+		//fieldBoosts.put("title", titleBoost);
+		
+		fieldBoosts.put(CONTENT, contentBoost);	
+		MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE },new MyCustomAnalyzer(), fieldBoosts);
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
 
 		// Iterate through topic tags & structure queries
@@ -116,30 +128,44 @@ public class CreateQuery {
 			String fullDescriptionForQuery = description + newNarr;
 			//System.out.println(fullDescriptionForQuery);
 			
-			// Term Constructor --> new Term(field, text)
-			Query q1 = new TermQuery(new Term(CONTENT, title));
-			Query q2 = new TermQuery(new Term(CONTENT, fullDescriptionForQuery));
 			
-			String forOther = newNarr + " " + title + " " + description;
-			Query testOther = new TermQuery(new Term(OTHER, forOther));
-			Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
+			Query titlequery = multiqp.parse(title);
+			Query descriptionquery = multiqp.parse(description);
+			
+			Query boostedtitle = new BoostQuery(titlequery, 1);
+			Query boosteddescription = new BoostQuery(descriptionquery, 2);
+			
+			
+			// Term Constructor --> new Term(field, text)
+			//Query q1 = new TermQuery(new Term(CONTENT, title));
+			//Query q2 = new TermQuery(new Term(CONTENT, fullDescriptionForQuery));
+			
+			//String forOther = newNarr + " " + title + " " + description;
+			//Query testOther = new TermQuery(new Term(OTHER, forOther));
+			//Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
 			//Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
 
 
-			Query boostedQ1 = new BoostQuery(q1, 1.5F);
-			Query boostedQ2 = new BoostQuery(q2, 2.5F);
-			Query boostedOther = new BoostQuery(testOther, 2.5F);
-			Query boostedTestOtherForTitle = new BoostQuery(testOtherForTitle, 2.5F);
+			//Query boostedQ1 = new BoostQuery(q1, 1.5F);
+			//Query boostedQ2 = new BoostQuery(q2, 2.5F);
+			//Query boostedOther = new BoostQuery(testOther, 2.5F);
+			//Query boostedTestOtherForTitle = new BoostQuery(testOtherForTitle, 2.5F);
 			//Query boostedMustNot = new BoostQuery(mustNotQuery, 1.5F);
 
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
-			newBooleanQuery.add(boostedQ1, BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(boostedQ2, BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(boostedOther, BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(boostedTestOtherForTitle, BooleanClause.Occur.SHOULD);
+			//newBooleanQuery.add(boostedQ1, BooleanClause.Occur.SHOULD);
+			//newBooleanQuery.add(boostedQ2, BooleanClause.Occur.SHOULD);
+			//newBooleanQuery.add(boostedOther, BooleanClause.Occur.SHOULD);
+			//newBooleanQuery.add(boostedTestOtherForTitle, BooleanClause.Occur.SHOULD);
 			//newBooleanQuery.add(mustNotQuery, BooleanClause.Occur.MUST_NOT);
 			
-			Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
+			newBooleanQuery.add(boostedtitle, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(boosteddescription, BooleanClause.Occur.SHOULD);
+			
+			//Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
+			Query newQuery = newBooleanQuery.build();
+			//System.out.println(newQuery.toString());
+			
 			
 			// Get query results from the index searcher
             ScoreDoc[] hits = isearcher.search(newQuery, MAX_RESULTS).scoreDocs;

@@ -22,7 +22,8 @@ import org.apache.lucene.search.similarities.Similarity;
 public class App {
 	
 	private static String runName = "";
-	private static Similarity runSimilarity = new BM25Similarity();;
+	private static Similarity runSimilarity = new BM25Similarity();
+	private static Float contentBoost = 1f;
 
 
 	public static void main(String[] args) {
@@ -93,6 +94,37 @@ public class App {
 					}	
 				}
 			}
+			else if("analyze-field-boosts".equals(args[0])) {
+				
+				
+				System.out.println("Analyzing Field Boosts");
+				
+				
+				float[] contentBoostArray = {0.1f, 0.15f, 0.2f, 0.25f, 0.3f, 0.35f, 0.4f, 0.45f, 0.5f, 0.55f, 0.6f, 0.65f, 0.7f, 0.75f, 0.8f, 0.85f, 0.9f, 0.95f, 1.0f,
+							1.05f,1.1f, 1.15f, 1.2f, 1.25f, 1.3f, 1.35f, 1.4f, 1.45f, 1.5f, 1.55f, 1.6f, 1.65f, 1.7f, 1.75f, 1.8f, 1.85f, 1.9f, 1.95f, 2.0f,
+							2.05f,2.1f, 2.15f, 2.2f, 1.25f, 2.3f, 2.35f, 2.4f, 2.45f, 2.5f, 2.55f, 2.6f, 2.65f, 2.7f, 2.75f, 2.8f, 2.85f, 2.9f, 2.95f, 3.0f};
+				
+				for(float runContentBoost : contentBoostArray) {
+						
+
+						//runSimilarity = new BM25Similarity(k1param, bparam);
+						contentBoost = runContentBoost;
+						runName = "_FieldBoosts_contentBoost_"+contentBoost;
+						System.out.println(runName);
+							
+							
+							try {
+								generateQueries();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+					
+							
+							//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
+						
+				}
+			}			
 			else {
 				System.out.println("Invalid arguments");
 			}
@@ -111,7 +143,7 @@ public class App {
 
 		// Clear temporary folder
 		clearTempDirectory(new File(TEMP_FOLDER));
-		CreateIndexSimple createIndex = new CreateIndexSimple(runName, runSimilarity);
+		CreateIndex createIndex = new CreateIndex(runName, runSimilarity);
 		List<CustomDocument> documents = new ArrayList<CustomDocument>();
 
 		System.out.println("STARTING Parsing and Indexing...");
@@ -119,7 +151,7 @@ public class App {
 		System.out.println("Parsing Financial Times");
 		for (String fileName : financialTimesFiles) {
 			DocumentParserSGML documentParser = new DocumentParserSGML();
-			documents = documentParser.parseFTLA(fileName);
+			documents = documentParser.parseFT(fileName);
 			createIndex.indexCorpus(documents);
 		}
 
@@ -144,7 +176,7 @@ public class App {
 		System.out.println("Parsing LA Times documents");
 		for (String fileName : losAngelosTimesFiles) {
 			DocumentParserSGML documentParser = new DocumentParserSGML();
-			documents = documentParser.parseFTLA(fileName);
+			documents = documentParser.parseLA(fileName);
 			createIndex.indexCorpus(documents);
 		}
 
@@ -155,7 +187,7 @@ public class App {
 	}
 	
 	private static void generateQueries() throws IOException, ParseException {
-		CreateQuery createQuery = new CreateQuery(runName, runSimilarity);
+		CreateQuery createQuery = new CreateQuery(runName, runSimilarity, contentBoost);
 		createQuery.queryTopics();
 	}
 

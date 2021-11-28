@@ -55,9 +55,20 @@ public class DocumentParserSGML {
 		return documents;
 	}
 	
-	public List<CustomDocument> parseFTLA(String filePath) {
+	public List<CustomDocument> parseFT(String filePath) {
 		//System.out.println("STARTED Parsing file >>> " + filePath);
 		String fileAsXML = decorateFileToXML(filePath);
+		//System.out.println("FINISHED Parsing file >>> " + filePath);
+		return parse(fileAsXML);
+	}
+	
+	public List<CustomDocument> parseLA(String filePath) {
+		//System.out.println("STARTED Parsing file >>> " + filePath);
+		String fileAsXML = decorateFileToXML(filePath);
+		FileDecorator fileDecorator = new FileDecorator(fileAsXML);
+		fileDecorator.replaceAll("<P>", "");
+		fileDecorator.replaceAll("</P>", "");
+		fileDecorator.decorate();
 		//System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);
 	}
