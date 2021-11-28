@@ -111,9 +111,9 @@ public class CreateQuery {
     		//System.out.println(queryId);
 
 			int narrLength = "Narrative:".length() + 1;
-			System.out.println(narrative);
+			//System.out.println(narrative);
 			narrative = narrative.substring(narrLength, narrative.length());
-			System.out.println(narrative);
+			//System.out.println(narrative);
 			//narrative = narrative.replace("\r","").replace("\n","");
 			
 			//Testing Editing the Narrative text to take out any clauses that specify what is not relevant
@@ -184,7 +184,7 @@ public class CreateQuery {
 			
 			//Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
 			Query newQuery = newBooleanQuery.build();
-			System.out.println(newQuery.toString());
+			//System.out.println(newQuery.toString());
 			
 			
 			// Get query results from the index searcher
