@@ -41,24 +41,29 @@ public class CreateQuery {
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity();
 	private Float contentBoost = 5.35f;
+	private Float titleBoost = 1f;
 	private Float topicTitleBoost = 1f;
+	private Float topicDescriptionBoost = 1f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
 		this.runName=runName;
 		this.runSimilarity = runSimilarity;		
 	}
 	
-	public CreateQuery(String runName, Similarity runSimilarity, String boostString, Float customBoost) {
+	public CreateQuery(String runName, Similarity runSimilarity, String boostString, Float customBoost1, Float customBoost2) {
 		this.runName=runName;
 		this.runSimilarity = runSimilarity;
 		
-		if(boostString.equals(CONTENT)) {
+		if(boostString.equals("field")) {
 		System.out.println("Boosting Content Field");
-		this.contentBoost = customBoost;
+		this.contentBoost = customBoost1;
+		this.titleBoost = customBoost2;
 		
-		} else if(boostString.equals("topicTitle")) {		
+		} else if(boostString.equals("topic")) {		
+			System.out.println("Boosting Topic");
+			this.topicTitleBoost = customBoost1;
+			this.topicDescriptionBoost = customBoost2;
 			
-			this.topicTitleBoost = customBoost;
 		}
 	}
 	
@@ -106,7 +111,10 @@ public class CreateQuery {
     		//System.out.println(queryId);
 
 			int narrLength = "Narrative:".length() + 1;
+			System.out.println(narrative);
 			narrative = narrative.substring(narrLength, narrative.length());
+			System.out.println(narrative);
+			//narrative = narrative.replace("\r","").replace("\n","");
 			
 			//Testing Editing the Narrative text to take out any clauses that specify what is not relevant
 			String[] narrSentences = narrative.split("\\.");
@@ -138,12 +146,13 @@ public class CreateQuery {
 			//System.out.println(fullDescriptionForQuery);
 			
 			
-			Query topicTitleQuery = multiqp.parse(title);
-			Query topicDescriptionQuery = multiqp.parse(description);
-			//Query topicNarrativeQuery = multiqp.parse(narrative);
+			Query topicTitleQuery = multiqp.parse(MultiFieldQueryParser.escape(title));
+			Query topicDescriptionQuery = multiqp.parse(MultiFieldQueryParser.escape(description));
+			Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(narrative));
 			
 			Query boostedTopicTitle = new BoostQuery(topicTitleQuery, topicTitleBoost);
-			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, 1f);
+			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, topicDescriptionBoost);
+			Query boostedTopicNarrative = new BoostQuery(topicDescriptionQuery, 1f);
 			
 			
 			// Term Constructor --> new Term(field, text)
@@ -171,10 +180,11 @@ public class CreateQuery {
 			
 			newBooleanQuery.add(boostedTopicTitle, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedTopicDescription, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(boostedTopicNarrative, BooleanClause.Occur.SHOULD);
 			
 			//Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
 			Query newQuery = newBooleanQuery.build();
-			//System.out.println(newQuery.toString());
+			System.out.println(newQuery.toString());
 			
 			
 			// Get query results from the index searcher
