@@ -6,7 +6,6 @@ import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
-
 import org.apache.lucene.analysis.core.FlattenGraphFilter;
 
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
@@ -16,6 +15,8 @@ import org.apache.lucene.analysis.en.KStemFilter;
 import org.apache.lucene.analysis.en.PorterStemFilter;
 import org.apache.lucene.analysis.hunspell.HunspellStemFilter;
 import org.apache.lucene.analysis.miscellaneous.CapitalizationFilter;
+import org.apache.lucene.analysis.ngram.EdgeNGramTokenFilter;
+import org.apache.lucene.analysis.shingle.FixedShingleFilter;
 import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -73,7 +74,9 @@ public class MyCustomAnalyzer extends Analyzer {
       
         //CharArraySet custom_stopwords = StopFilter.makeStopSet(Custom_StopWords.getStopWords());
         //result = new StopFilter(result, custom_stopwords);
-
+        
+        //result = new EdgeNGramTokenFilter(result, 2); Terrible, MAP score of 0
+        //result = new ShingleFilter(result, 2, 2); // Marginal drop in MAP, would be good to run after stopwords updated
         
         if(stemmer == "Porter") {
         	result = new PorterStemFilter(result);
