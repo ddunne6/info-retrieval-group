@@ -50,7 +50,7 @@ public class CustomStopWords {
 				stopWordsAsArray = stopWordsAsList.toArray(new String[0]);
 
 			}
-
+			wb.close();
 			return stopWordsAsArray;
 		} catch (Exception e) {
 			e.printStackTrace();
