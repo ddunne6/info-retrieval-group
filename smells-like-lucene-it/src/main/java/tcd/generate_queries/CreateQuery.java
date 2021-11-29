@@ -42,6 +42,7 @@ public class CreateQuery {
 	private Similarity runSimilarity = new BM25Similarity();
 	private Float contentBoost = 5.35f;
 	private Float titleBoost = 1f;
+	private Float otherBoost = 1f;
 	//private Float topicTitleBoost = 2.35f;
 	private Float topicTitleBoost = 4f;
 	private Float topicDescriptionBoost = 2.5f;
@@ -68,6 +69,24 @@ public class CreateQuery {
 			
 		}
 	}
+	public CreateQuery(String runName, Similarity runSimilarity, String boostString, Float customBoost1, Float customBoost2, Float customBoost3) {
+		this.runName=runName;
+		this.runSimilarity = runSimilarity;
+		
+		if(boostString.equals("field")) {
+		System.out.println("Boosting Content Field");
+		this.contentBoost = customBoost1;
+		this.titleBoost = customBoost2;
+		this.otherBoost = customBoost3;
+		
+		} else if(boostString.equals("topic")) {		
+			System.out.println("Boosting Topic");
+			this.topicTitleBoost = customBoost1;
+			this.topicDescriptionBoost = customBoost2;
+			this.topicNarrativeBoost = customBoost3;
+			
+		}
+	}
 	
 	public void queryTopics() throws IOException, ParseException {
 
@@ -90,7 +109,8 @@ public class CreateQuery {
 		//fieldBoosts.put("title", titleBoost);
 		
 		fieldBoosts.put(CONTENT, contentBoost);	
-		MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE },new MyCustomAnalyzer(), fieldBoosts);
+		//MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE },new MyCustomAnalyzer(), fieldBoosts);
+		MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE, OTHER },new MyCustomAnalyzer(), fieldBoosts);
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
 
 		// Iterate through topic tags & structure queries
@@ -143,11 +163,11 @@ public class CreateQuery {
 					mustNotNarr += ".";
 			}
 
-			System.out.println(narrative);
-			System.out.println("RELEVANT");
-			System.out.println(newNarr);
-			System.out.println("NOT RELEVANT");
-			System.out.println(mustNotNarr);
+//			System.out.println(narrative);
+//			System.out.println("RELEVANT");
+//			System.out.println(newNarr);
+//			System.out.println("NOT RELEVANT");
+//			System.out.println(mustNotNarr);
 			//Previously used newNarr in query, not narrative string
 			
 			String fullDescriptionForQuery = description + newNarr;
