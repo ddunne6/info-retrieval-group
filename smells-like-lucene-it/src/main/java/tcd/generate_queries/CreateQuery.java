@@ -42,8 +42,10 @@ public class CreateQuery {
 	private Similarity runSimilarity = new BM25Similarity();
 	private Float contentBoost = 5.35f;
 	private Float titleBoost = 1f;
-	private Float topicTitleBoost = 2.35f;
-	private Float topicDescriptionBoost = 1f;
+	//private Float topicTitleBoost = 2.35f;
+	private Float topicTitleBoost = 4f;
+	private Float topicDescriptionBoost = 2.5f;
+	private Float topicNarrativeBoost = 1f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
 		this.runName=runName;
@@ -134,12 +136,18 @@ public class CreateQuery {
 				}
 				if(newNarr != "")
 					newNarr += ".";
+				else
+					newNarr = ".";
 				
 				if(mustNotNarr != "")
 					mustNotNarr += ".";
 			}
 
-			
+			System.out.println(narrative);
+			System.out.println("RELEVANT");
+			System.out.println(newNarr);
+			System.out.println("NOT RELEVANT");
+			System.out.println(mustNotNarr);
 			//Previously used newNarr in query, not narrative string
 			
 			String fullDescriptionForQuery = description + newNarr;
@@ -147,11 +155,12 @@ public class CreateQuery {
 			
 			Query topicTitleQuery = multiqp.parse(MultiFieldQueryParser.escape(title));
 			Query topicDescriptionQuery = multiqp.parse(MultiFieldQueryParser.escape(description));
-			Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(narrative));
+			//Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(narrative));
+			Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(newNarr));
 			
 			Query boostedTopicTitle = new BoostQuery(topicTitleQuery, topicTitleBoost);
 			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, topicDescriptionBoost);
-			Query boostedTopicNarrative = new BoostQuery(topicNarrativeQuery, 1f);
+			Query boostedTopicNarrative = new BoostQuery(topicNarrativeQuery, topicNarrativeBoost);
 			
 			
 			

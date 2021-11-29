@@ -125,6 +125,11 @@ public class CreateIndex {
 				} 
 				else
 				{
+					if(tempOtherInfo.getTag().equals("H3")) {
+						
+						System.out.println(tempOtherInfo.getTag());
+						System.out.println("Content is: "+tempOtherInfo.getContentAsString());
+					}
 					//System.out.println("Tag is: "+tempOtherInfo.getTag());
 					//System.out.println("Content is: "+tempOtherInfo.getContentAsString());
 					document.add(new TextField(CONTENT, tempOtherInfo.getContentAsString(), Field.Store.YES));
