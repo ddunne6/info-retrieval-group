@@ -1,4 +1,4 @@
-
+nano src/main/java/tcd/analyzers/MyCustomAnalyzer.java
  						Setup
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
@@ -7,20 +7,33 @@ Download Assignment 2 Document Collection and add extracted folder here. (The fi
 
 Build
 ------------------------------
-cd smells-like-lucene-it
 mvn package
 
 
+################################# Run#############################################################################
 
-
- Run Index
+ Index
 
 --------------------------------
 java -jar target/smells-like-lucene-it-0.0.1-SNAPSHOT.jar index
 --------------------------------------------------------------
 
-Run  Query
+
+If index is already created and you want to restart, 
+cd ..
+rm -r index/index_corpus
+
+Then use the command: java -jar target/smells-like-lucene-it-0.0.1-SNAPSHOT.jar index
+
+ Query
+
+CD to the smells-like-luceneit directory
 
 
-java -jar target/smells-like-lucene-it-0.0.1-SNAPSHOT.jar query
+Command: java -jar target/smells-like-lucene-it-0.0.1-SNAPSHOT.jar query
 -----------------------------------------------------------------
+
+Trec_Eval
+
+cd .. 
+trec_eval qrels-assignment2.part1 results/results_file
