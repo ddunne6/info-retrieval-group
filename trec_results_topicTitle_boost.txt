@@ -1,0 +1,142 @@
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_0.5
+map                   	all	0.2865
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.0
+map                   	all	0.3067
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.4
+map                   	all	0.3103
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.45
+map                   	all	0.3110
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.5
+map                   	all	0.3115
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.55
+map                   	all	0.3116
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.6
+map                   	all	0.3118
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.65
+map                   	all	0.3120
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.7
+map                   	all	0.3126
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.75
+map                   	all	0.3125
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.8
+map                   	all	0.3124
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.85
+map                   	all	0.3126
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.9
+map                   	all	0.3126
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_1.95
+map                   	all	0.3130
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.0
+map                   	all	0.3131
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.05
+map                   	all	0.3132
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.1
+map                   	all	0.3127
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.15
+map                   	all	0.3130
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.2
+map                   	all	0.3131
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.25
+map                   	all	0.3130
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.3
+map                   	all	0.3131
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.35
+map                   	all	0.3133
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.4
+map                   	all	0.3132
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.45
+map                   	all	0.3126
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.5
+map                   	all	0.3126
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.55
+map                   	all	0.3124
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.6
+map                   	all	0.3123
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.65
+map                   	all	0.3124
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.7
+map                   	all	0.3120
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.75
+map                   	all	0.3118
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.8
+map                   	all	0.3116
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.85
+map                   	all	0.3116
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.9
+map                   	all	0.3115
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_2.95
+map                   	all	0.3114
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_3.0
+map                   	all	0.3111
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_3.5
+map                   	all	0.3095
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_4.0
+map                   	all	0.3081
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_4.5
+map                   	all	0.3065
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_5.0
+map                   	all	0.3050
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_5.5
+map                   	all	0.3020
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_6.0
+map                   	all	0.3002
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_6.5
+map                   	all	0.2981
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_7.0
+map                   	all	0.2968
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_7.5
+map                   	all	0.2955
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_8.0
+map                   	all	0.2941
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_8.5
+map                   	all	0.2936
+
+/home/reynolke/info-retrieval-group/results/results_file_FieldBoosts_topicTitleBoost_9.0
+map                   	all	0.2924
+
