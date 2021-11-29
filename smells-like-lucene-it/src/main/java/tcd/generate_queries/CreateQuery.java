@@ -140,11 +140,10 @@ public class CreateQuery {
 			}
 
 			
-    		//title = "\"" + title + "\"";
+			//Previously used newNarr in query, not narrative string
 			
 			String fullDescriptionForQuery = description + newNarr;
 			//System.out.println(fullDescriptionForQuery);
-			
 			
 			Query topicTitleQuery = multiqp.parse(MultiFieldQueryParser.escape(title));
 			Query topicDescriptionQuery = multiqp.parse(MultiFieldQueryParser.escape(description));
@@ -152,18 +151,14 @@ public class CreateQuery {
 			
 			Query boostedTopicTitle = new BoostQuery(topicTitleQuery, topicTitleBoost);
 			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, topicDescriptionBoost);
-			Query boostedTopicNarrative = new BoostQuery(topicDescriptionQuery, 1f);
+			Query boostedTopicNarrative = new BoostQuery(topicNarrativeQuery, 1f);
 			
 			
-			// Term Constructor --> new Term(field, text)
-			//Query q1 = new TermQuery(new Term(CONTENT, title));
-			//Query q2 = new TermQuery(new Term(CONTENT, fullDescriptionForQuery));
 			
 			//String forOther = newNarr + " " + title + " " + description;
 			//Query testOther = new TermQuery(new Term(OTHER, forOther));
 			//Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
 			//Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
-
 
 			//Query boostedQ1 = new BoostQuery(q1, 1.5F);
 			//Query boostedQ2 = new BoostQuery(q2, 2.5F);
@@ -172,11 +167,7 @@ public class CreateQuery {
 			//Query boostedMustNot = new BoostQuery(mustNotQuery, 1.5F);
 
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
-			//newBooleanQuery.add(boostedQ1, BooleanClause.Occur.SHOULD);
-			//newBooleanQuery.add(boostedQ2, BooleanClause.Occur.SHOULD);
-			//newBooleanQuery.add(boostedOther, BooleanClause.Occur.SHOULD);
-			//newBooleanQuery.add(boostedTestOtherForTitle, BooleanClause.Occur.SHOULD);
-			//newBooleanQuery.add(mustNotQuery, BooleanClause.Occur.MUST_NOT);
+
 			
 			newBooleanQuery.add(boostedTopicTitle, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedTopicDescription, BooleanClause.Occur.SHOULD);
