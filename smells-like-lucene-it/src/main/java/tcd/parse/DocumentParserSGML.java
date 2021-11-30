@@ -55,9 +55,24 @@ public class DocumentParserSGML {
 		return documents;
 	}
 	
-	public List<CustomDocument> parseFTLA(String filePath) {
+	public List<CustomDocument> parseFT(String filePath) {
 		//System.out.println("STARTED Parsing file >>> " + filePath);
 		String fileAsXML = decorateFileToXML(filePath);
+		FileDecorator fileDecorator = new FileDecorator(fileAsXML);
+		fileDecorator.replaceAcronyms();
+		fileDecorator.decorate();
+		//System.out.println("FINISHED Parsing file >>> " + filePath);
+		return parse(fileAsXML);
+	}
+	
+	public List<CustomDocument> parseLA(String filePath) {
+		//System.out.println("STARTED Parsing file >>> " + filePath);
+		String fileAsXML = decorateFileToXML(filePath);
+		FileDecorator fileDecorator = new FileDecorator(fileAsXML);
+		fileDecorator.replaceAll("<P>", "");
+		fileDecorator.replaceAll("</P>", "");
+		fileDecorator.replaceAcronyms();
+		fileDecorator.decorate();
 		//System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);
 	}
@@ -72,6 +87,7 @@ public class DocumentParserSGML {
 		fileDecorator.replaceAll(" ID=\\w+-\\w+-\\w+\\w-\\w+", "");
 		fileDecorator.replaceAll("<\\d>", "<digit>");
 		fileDecorator.replaceAll("</\\d>", "</digit>");
+		fileDecorator.replaceAcronyms();
 		fileDecorator.decorate();
 		//System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);
@@ -83,6 +99,7 @@ public class DocumentParserSGML {
 		FileDecorator fileDecorator = new FileDecorator(fileAsXML);
 		fileDecorator.replaceAll("&\\w+", "");
 		fileDecorator.replaceAll("&", "");
+		fileDecorator.replaceAcronyms();
 		fileDecorator.decorate();
 		//System.out.println("FINISHED Parsing file >>> " + filePath);
 		return parse(fileAsXML);

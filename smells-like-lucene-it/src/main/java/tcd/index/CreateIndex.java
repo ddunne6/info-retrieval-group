@@ -1,24 +1,25 @@
 package tcd.index;
-import static tcd.constants.FilePathPatterns.*;
+
+import static tcd.constants.FilePathPatterns.INDEX_DIRECTORY_CORPUS;
+import static tcd.constants.QueryConstants.CONTENT;
+import static tcd.constants.QueryConstants.DOCID;
+import static tcd.constants.QueryConstants.OTHER;
+import static tcd.constants.QueryConstants.TITLE;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import java.util.Map;
-
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.core.KeywordAnalyzer;
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -26,23 +27,12 @@ import tcd.analyzers.MyCustomAnalyzer;
 import tcd.parse.CustomDocument;
 import tcd.parse.CustomTag;
 
-import static tcd.constants.QueryConstants.*;
-
-@Deprecated
-// Create index using objects from DocumentParser.parse()
 public class CreateIndex {
+	private Directory directory;
+	private IndexWriterConfig config;
+	private IndexWriter iwriter;
+	private Similarity indexSimilarity = new BM25Similarity();
 	
-	
-	ArrayList<Document> documents = new ArrayList<Document>();
-	
-	IndexWriterConfig config;
-	IndexWriter iwriter;
-	Directory directory;
-	PerFieldAnalyzerWrapper aWrapper;
-	Map<String, Analyzer> analyzerMap;
-	Boolean Flag = false;
-    FieldType ft = new FieldType(TextField.TYPE_STORED);
-
     public String MapTag(String tag)
     {
     	switch(tag)
@@ -76,10 +66,11 @@ public class CreateIndex {
     		case "IMPORT":
     		case "BYLINE":
     		case "DATELINE":
+    		//Moved FBIS 'HEADER' to 'Other' since it was just repeated 'Document Type:Daily Report'	
+    		case "HEADER":
     			return "Other";
     		case "HEADLINE":
-    		case "TI":
-    		case "HEADER":
+    		case "TI":    		
     		case "DOCTITLE":
     			return TITLE;
     		case "TEXT":
@@ -96,76 +87,59 @@ public class CreateIndex {
     	
     }
 	
-	public CreateIndex() throws IOException
-	{
 	
+	public CreateIndex(String runName, Similarity runSimilarity) throws IOException {
+		
+		//this.runIndex = runIndex+runName;
+		this.indexSimilarity = runSimilarity;
+
 		directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY_CORPUS));
 		
-		analyzerMap = new HashMap<String, Analyzer>();
-		
-		/* Leaving it here in case required later
-		//For Financial times Corpus
-		analyzerMap.put("PROFILE", new KeywordAnalyzer());
-		analyzerMap.put("PUB", new KeywordAnalyzer());
-		analyzerMap.put("DATE", new KeywordAnalyzer());
-		analyzerMap.put("PAGE", new KeywordAnalyzer());
-		
-		//For Financial Register Corpus
-		analyzerMap.put("USDEPT", new KeywordAnalyzer());
-		analyzerMap.put("USBUREAU", new KeywordAnalyzer());
-		analyzerMap.put("CFRNO", new KeywordAnalyzer());
-		analyzerMap.put("RINDOCK", new KeywordAnalyzer());
-		analyzerMap.put("AGENCY", new KeywordAnalyzer());
-		analyzerMap.put("ACTION", new KeywordAnalyzer());
-		*/
- 
-		analyzerMap.put(OTHER, new WhitespaceAnalyzer());
-		analyzerMap.put(DOCID, new KeywordAnalyzer());
-		
-		aWrapper = new PerFieldAnalyzerWrapper(new MyCustomAnalyzer(),analyzerMap);
-		
-	    ft.setTokenized(true);
-	    ft.setStoreTermVectors(true);
-	    ft.setStoreTermVectorPositions(true);
-	    ft.setStoreTermVectorOffsets(true);
-	    ft.setStoreTermVectorPayloads(true);
-		
-		config = new IndexWriterConfig(aWrapper);
-		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-		iwriter = new IndexWriter(directory, config);
+		config = new IndexWriterConfig(new MyCustomAnalyzer());
+		//config = new IndexWriterConfig(new EnglishAnalyzer());
+		config.setSimilarity(indexSimilarity);
+        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        
+        System.out.println("Index directory: "+directory.toString());
+        System.out.println("Similarity: "+config.getSimilarity());
+        
+        iwriter = new IndexWriter(directory, config);
 	}
 	
-	public void indexCorpus(List<CustomDocument> rawDocuments) throws IOException
-	{
+	public void indexCorpus(List<CustomDocument> documents) throws IOException {
+		
+		ArrayList<Document> indexedDocuments = new ArrayList<Document>();
 		String Mappedtag;
-		for (CustomDocument tempDoc : rawDocuments)
-		{
+		for (CustomDocument tempDoc : documents) {
 			Document document = new Document();
 			document.add(new StringField(DOCID, tempDoc.getDocno(), Field.Store.YES));
-			for(CustomTag tempOtherInfo : tempDoc.getOtherInfo())
+			for(CustomTag tempOtherInfo : tempDoc.getOtherInfo()) 
 			{
+			
 				Mappedtag = MapTag(tempOtherInfo.getTag());
-				if (!Mappedtag.contains("Tag not found"))
+				if (Mappedtag.equals(TITLE))
 				{
-					document.add(new Field(Mappedtag, tempOtherInfo.getContentAsString(), ft));
-				}
+					//System.out.println("Title tag is: "+tempOtherInfo.getTag());
+					//System.out.println("Title is: "+tempOtherInfo.getContentAsString());
+					document.add(new TextField(TITLE, tempOtherInfo.getContentAsString(), Field.Store.YES));
+				} 
 				else
 				{
-					System.out.println("Unhandled tag: " + tempOtherInfo.getTag() );
+					if(tempOtherInfo.getTag().equals("H3")) {
+						
+						//System.out.println(tempOtherInfo.getTag());
+						//System.out.println("Content is: "+tempOtherInfo.getContentAsString());
+					}
+					//System.out.println("Tag is: "+tempOtherInfo.getTag());
+					//System.out.println("Content is: "+tempOtherInfo.getContentAsString());
+					document.add(new TextField(CONTENT, tempOtherInfo.getContentAsString(), Field.Store.YES));
 				}
 			}
-			documents.add(document);
-			iwriter.addDocuments(documents);
-			documents.clear();
-		}		
-		System.out.println("INDEXED Documents");
-		//Switch to append so that it doesn't create a new index for next set of documents
-//		if(Flag == false)
-//		{
-//			config.setOpenMode(IndexWriterConfig.OpenMode.APPEND);
-//			iwriter = new IndexWriter(directory, config);
-//			Flag = true;
-//		}
+			indexedDocuments.add(document);
+			iwriter.addDocuments(indexedDocuments);
+			indexedDocuments.clear();
+		}
+		//System.out.println("INDEXED Documents");
 	}
 	
 	public void closeIndex() {
@@ -176,5 +150,5 @@ public class CreateIndex {
 			e.printStackTrace();
 		}	
 	}
-
+	
 }

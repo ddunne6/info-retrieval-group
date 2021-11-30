@@ -2,7 +2,10 @@ package tcd.generate_queries;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.io.FileWriter;
 
 import org.apache.lucene.index.DirectoryReader;
@@ -22,6 +25,7 @@ import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 
@@ -30,7 +34,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import tcd.analyzers.MyCustomAnalyzer;
+import tcd.parse.FileDecorator;
+
 import static tcd.constants.QueryConstants.*;
+import static tcd.constants.SGMLTags.XML_DUMMY;
+import static tcd.constants.SGMLTags.closingTag;
+import static tcd.constants.SGMLTags.openingTag;
 import static tcd.constants.FilePathPatterns.*;
 
 public class CreateQuery {
@@ -39,11 +48,33 @@ public class CreateQuery {
 	private static final int MAX_RESULTS = 1000;
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity();
+	private Float contentBoost = 5.35f;
+	private Float titleBoost = 1f;
+	//private Float topicTitleBoost = 2.35f;
+	private Float topicTitleBoost = 4f;
+	private Float topicDescriptionBoost = 2.5f;
+	private Float topicNarrativeBoost = 1f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
 		this.runName=runName;
+		this.runSimilarity = runSimilarity;		
+	}
+	
+	public CreateQuery(String runName, Similarity runSimilarity, String boostString, Float customBoost1, Float customBoost2) {
+		this.runName=runName;
 		this.runSimilarity = runSimilarity;
 		
+		if(boostString.equals("field")) {
+		System.out.println("Boosting Content Field");
+		this.contentBoost = customBoost1;
+		this.titleBoost = customBoost2;
+		
+		} else if(boostString.equals("topic")) {		
+			System.out.println("Boosting Topic");
+			this.topicTitleBoost = customBoost1;
+			this.topicDescriptionBoost = customBoost2;
+			
+		}
 	}
 	
 	public void queryTopics() throws IOException, ParseException {
@@ -57,12 +88,24 @@ public class CreateQuery {
 		DirectoryReader ireader = DirectoryReader.open(directory);
 		IndexSearcher isearcher = new IndexSearcher(ireader);		
 		isearcher.setSimilarity(runSimilarity);
-
+		
+		// Decorate file before parsing
+		String tempFile = createTempFile(topicsFile);
+		FileDecorator fileDecorator = new FileDecorator(tempFile);
+		fileDecorator.replaceAcronyms();
+		fileDecorator.decorate();
+		
+		
 		// Parse topics file with Jsoup & select topic tags
-		org.jsoup.nodes.Document doc = Jsoup.parse(topicsFile, "UTF-8", "");
+		org.jsoup.nodes.Document doc = Jsoup.parse(new File(tempFile), "UTF-8", "");
 		topics = doc.body().select("top");
 
 		QueryParser parser = new QueryParser("content", new EnglishAnalyzer());
+		HashMap<String, Float> fieldBoosts = new HashMap<String, Float>(); 
+		//fieldBoosts.put("title", titleBoost);
+		
+		fieldBoosts.put(CONTENT, contentBoost);	
+		MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE },new MyCustomAnalyzer(), fieldBoosts);
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
 
 		// Iterate through topic tags & structure queries
@@ -85,7 +128,10 @@ public class CreateQuery {
     		//System.out.println(queryId);
 
 			int narrLength = "Narrative:".length() + 1;
+			//System.out.println(narrative);
 			narrative = narrative.substring(narrLength, narrative.length());
+			//System.out.println(narrative);
+			//narrative = narrative.replace("\r","").replace("\n","");
 			
 			//Testing Editing the Narrative text to take out any clauses that specify what is not relevant
 			String[] narrSentences = narrative.split("\\.");
@@ -105,41 +151,56 @@ public class CreateQuery {
 				}
 				if(newNarr != "")
 					newNarr += ".";
+				else
+					newNarr = ".";
 				
 				if(mustNotNarr != "")
 					mustNotNarr += ".";
 			}
 
-			
-    		//title = "\"" + title + "\"";
+			//System.out.println(narrative);
+			//System.out.println("RELEVANT");
+			//System.out.println(newNarr);
+			//System.out.println("NOT RELEVANT");
+			//System.out.println(mustNotNarr);
+			//Previously used newNarr in query, not narrative string
 			
 			String fullDescriptionForQuery = description + newNarr;
 			//System.out.println(fullDescriptionForQuery);
 			
-			// Term Constructor --> new Term(field, text)
-			Query q1 = new TermQuery(new Term(CONTENT, title));
-			Query q2 = new TermQuery(new Term(CONTENT, fullDescriptionForQuery));
+			Query topicTitleQuery = multiqp.parse(MultiFieldQueryParser.escape(title));
+			Query topicDescriptionQuery = multiqp.parse(MultiFieldQueryParser.escape(description));
+			//Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(narrative));
+			Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(newNarr));
 			
-			String forOther = newNarr + " " + title + " " + description;
-			Query testOther = new TermQuery(new Term(OTHER, forOther));
-			Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
+			Query boostedTopicTitle = new BoostQuery(topicTitleQuery, topicTitleBoost);
+			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, topicDescriptionBoost);
+			Query boostedTopicNarrative = new BoostQuery(topicNarrativeQuery, topicNarrativeBoost);
+			
+			
+			
+			//String forOther = newNarr + " " + title + " " + description;
+			//Query testOther = new TermQuery(new Term(OTHER, forOther));
+			//Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
 			//Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
 
-
-			Query boostedQ1 = new BoostQuery(q1, 1.5F);
-			Query boostedQ2 = new BoostQuery(q2, 2.5F);
-			Query boostedOther = new BoostQuery(testOther, 2.5F);
-			Query boostedTestOtherForTitle = new BoostQuery(testOtherForTitle, 2.5F);
+			//Query boostedQ1 = new BoostQuery(q1, 1.5F);
+			//Query boostedQ2 = new BoostQuery(q2, 2.5F);
+			//Query boostedOther = new BoostQuery(testOther, 2.5F);
+			//Query boostedTestOtherForTitle = new BoostQuery(testOtherForTitle, 2.5F);
 			//Query boostedMustNot = new BoostQuery(mustNotQuery, 1.5F);
 
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
-			newBooleanQuery.add(boostedQ1, BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(boostedQ2, BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(boostedOther, BooleanClause.Occur.SHOULD);
-			newBooleanQuery.add(boostedTestOtherForTitle, BooleanClause.Occur.SHOULD);
-			//newBooleanQuery.add(mustNotQuery, BooleanClause.Occur.MUST_NOT);
+
 			
-			Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
+			newBooleanQuery.add(boostedTopicTitle, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(boostedTopicDescription, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(boostedTopicNarrative, BooleanClause.Occur.SHOULD);
+			
+			//Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
+			Query newQuery = newBooleanQuery.build();
+			//System.out.println(newQuery.toString());
+			
 			
 			// Get query results from the index searcher
             ScoreDoc[] hits = isearcher.search(newQuery, MAX_RESULTS).scoreDocs;
@@ -157,5 +218,25 @@ public class CreateQuery {
     	}
 		fileWriter.close();
     	System.out.println("Querying Done ");
+	}
+	
+	private String createTempFile(File file) {
+		String tempFile = TEMP_FOLDER + file.getName() + "-temp.xml"; // TODO return saved copy instead of redoing work
+		Path path = Paths.get(tempFile);
+		try {
+			Files.deleteIfExists(path);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		// Copy this file to /temp-xml-conversion
+		File copied = new File(tempFile);
+		try {
+			FileUtils.copyFile(file, copied);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return tempFile;
 	}
 }

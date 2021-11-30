@@ -42,3 +42,4 @@ smells-like-lucene-it/target/maven-status/
 results/*
 !results/.placeholder
 results_file
+results_*/
