@@ -1,8 +1,12 @@
 package tcd.generate_queries;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.FileWriter;
 
 import org.apache.lucene.index.DirectoryReader;
@@ -57,7 +61,17 @@ public class CreateQuery {
 		DirectoryReader ireader = DirectoryReader.open(directory);
 		IndexSearcher isearcher = new IndexSearcher(ireader);		
 		isearcher.setSimilarity(runSimilarity);
-
+		
+		String file = "../cities.txt";
+		List<String> geoNames = new ArrayList<String>(); 
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       geoNames.add(line.split(" ")[0]);
+		       geoNames.add(line.split(" ")[1]);
+		    }
+		}
+		
 		// Parse topics file with Jsoup & select topic tags
 		org.jsoup.nodes.Document doc = Jsoup.parse(topicsFile, "UTF-8", "");
 		topics = doc.body().select("top");
@@ -119,13 +133,27 @@ public class CreateQuery {
 			// Term Constructor --> new Term(field, text)
 			Query q1 = new TermQuery(new Term(CONTENT, title));
 			Query q2 = new TermQuery(new Term(CONTENT, fullDescriptionForQuery));
-			
+
 			String forOther = newNarr + " " + title + " " + description;
 			Query testOther = new TermQuery(new Term(OTHER, forOther));
 			Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
 			//Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
-
-
+			String geoTitle = "";
+			String geoDescription = "";
+			
+			for (String name : geoNames) {
+				if(title.contains(name))
+				{
+					geoTitle += name;
+				}
+				if(fullDescriptionForQuery.contains(name))
+				{
+					geoDescription += name;
+				}
+			}
+			
+			Query geoboost1 = new BoostQuery(new TermQuery(new Term(CONTENT,geoTitle)),5.0F);
+			Query geoboost2 = new BoostQuery(new TermQuery(new Term(CONTENT,geoDescription)),5.0F);
 			Query boostedQ1 = new BoostQuery(q1, 1.5F);
 			Query boostedQ2 = new BoostQuery(q2, 2.5F);
 			Query boostedOther = new BoostQuery(testOther, 2.5F);
@@ -135,6 +163,8 @@ public class CreateQuery {
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
 			newBooleanQuery.add(boostedQ1, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedQ2, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(geoboost1, BooleanClause.Occur.SHOULD);
+			newBooleanQuery.add(geoboost2, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedOther, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedTestOtherForTitle, BooleanClause.Occur.SHOULD);
 			//newBooleanQuery.add(mustNotQuery, BooleanClause.Occur.MUST_NOT);
