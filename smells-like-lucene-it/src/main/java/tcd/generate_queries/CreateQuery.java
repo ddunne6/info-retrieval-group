@@ -2,6 +2,8 @@ package tcd.generate_queries;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.io.FileWriter;
@@ -23,6 +25,7 @@ import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 
@@ -31,7 +34,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import tcd.analyzers.MyCustomAnalyzer;
+import tcd.parse.FileDecorator;
+
 import static tcd.constants.QueryConstants.*;
+import static tcd.constants.SGMLTags.XML_DUMMY;
+import static tcd.constants.SGMLTags.closingTag;
+import static tcd.constants.SGMLTags.openingTag;
 import static tcd.constants.FilePathPatterns.*;
 
 public class CreateQuery {
@@ -80,9 +88,16 @@ public class CreateQuery {
 		DirectoryReader ireader = DirectoryReader.open(directory);
 		IndexSearcher isearcher = new IndexSearcher(ireader);		
 		isearcher.setSimilarity(runSimilarity);
-
+		
+		// Decorate file before parsing
+		String tempFile = createTempFile(topicsFile);
+		FileDecorator fileDecorator = new FileDecorator(tempFile);
+		fileDecorator.replaceAcronyms();
+		fileDecorator.decorate();
+		
+		
 		// Parse topics file with Jsoup & select topic tags
-		org.jsoup.nodes.Document doc = Jsoup.parse(topicsFile, "UTF-8", "");
+		org.jsoup.nodes.Document doc = Jsoup.parse(new File(tempFile), "UTF-8", "");
 		topics = doc.body().select("top");
 
 		QueryParser parser = new QueryParser("content", new EnglishAnalyzer());
@@ -143,11 +158,11 @@ public class CreateQuery {
 					mustNotNarr += ".";
 			}
 
-			System.out.println(narrative);
-			System.out.println("RELEVANT");
-			System.out.println(newNarr);
-			System.out.println("NOT RELEVANT");
-			System.out.println(mustNotNarr);
+			//System.out.println(narrative);
+			//System.out.println("RELEVANT");
+			//System.out.println(newNarr);
+			//System.out.println("NOT RELEVANT");
+			//System.out.println(mustNotNarr);
 			//Previously used newNarr in query, not narrative string
 			
 			String fullDescriptionForQuery = description + newNarr;
@@ -203,5 +218,25 @@ public class CreateQuery {
     	}
 		fileWriter.close();
     	System.out.println("Querying Done ");
+	}
+	
+	private String createTempFile(File file) {
+		String tempFile = TEMP_FOLDER + file.getName() + "-temp.xml"; // TODO return saved copy instead of redoing work
+		Path path = Paths.get(tempFile);
+		try {
+			Files.deleteIfExists(path);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		// Copy this file to /temp-xml-conversion
+		File copied = new File(tempFile);
+		try {
+			FileUtils.copyFile(file, copied);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return tempFile;
 	}
 }

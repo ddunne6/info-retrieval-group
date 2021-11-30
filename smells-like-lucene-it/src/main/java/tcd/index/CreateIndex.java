@@ -127,8 +127,8 @@ public class CreateIndex {
 				{
 					if(tempOtherInfo.getTag().equals("H3")) {
 						
-						System.out.println(tempOtherInfo.getTag());
-						System.out.println("Content is: "+tempOtherInfo.getContentAsString());
+						//System.out.println(tempOtherInfo.getTag());
+						//System.out.println("Content is: "+tempOtherInfo.getContentAsString());
 					}
 					//System.out.println("Tag is: "+tempOtherInfo.getTag());
 					//System.out.println("Content is: "+tempOtherInfo.getContentAsString());
