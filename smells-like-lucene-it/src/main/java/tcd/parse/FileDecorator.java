@@ -35,6 +35,11 @@ public class FileDecorator {
 		}
 	}
 	
+	public void replaceAcronyms() {
+		replaceAll("\\sU\\.S\\.", " United States of America");
+		replaceAll("\\sU\\.K\\.\\s", " United Kingdom ");
+	}
+	
 	public Path getPath() {
 		return path;
 	}
