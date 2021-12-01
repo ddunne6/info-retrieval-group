@@ -220,17 +220,17 @@ public class CreateQuery {
 				if(title.contains(name))
 				{
 					geoTitle += name+" ";
-					System.out.println(geoTitle);
+					//System.out.println(geoTitle);
 				}
 				if(description.contains(name))
 				{
 					geoDescription += name+" ";
-					System.out.println(geoDescription);
+					//System.out.println(geoDescription);
 				}
 			}
 			
 			String geoString = geoDescription+geoTitle;
-			System.out.println(geoString);
+			//System.out.println(geoString);
 
 //			System.out.println(narrative);
 //			System.out.println("RELEVANT");
@@ -272,7 +272,7 @@ public class CreateQuery {
 			
 			//Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
 			Query newQuery = newBooleanQuery.build();
-			//System.out.println(newQuery.toString());
+			System.out.println(newQuery.toString());
 			
 			
 			// Get query results from the index searcher

@@ -114,7 +114,8 @@ public class App {
 				//float[] contentBoostArray = {1.4f, 1.45f, 1.5f, 1.55f, 1.6f, 1.65f, 1.7f, 1.75f, 1.8f, 1.85f, 1.9f, 1.95f, 2.0f,
 				//2.05f,2.1f, 2.15f, 2.2f, 2.25f, 2.3f, 2.35f, 2.4f, 2.45f, 2.5f, 2.55f, 2.6f, 2.65f, 2.7f, 2.75f, 2.8f, 2.85f, 2.9f, 2.95f, 3.0f};
 				
-				float[] contentBoostArray = {4.5f, 5f, 5.5f, 6f, 6.5f, 7f, 7.5f, 8f, 8.5f, 9f};
+				//float[] contentBoostArray = {4.5f, 5f, 5.5f, 6f, 6.5f, 7f, 7.5f, 8f, 8.5f, 9f};
+				float[] contentBoostArray = {1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f};
 				float[] topicBoostArray = {0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 3.5f, 4f, 4.5f, 5f, 5.5f, 6f, 6.5f, 7f, 7.5f, 8f, 8.5f, 9f};
 				
 				for(float runBoost1 : contentBoostArray) {
