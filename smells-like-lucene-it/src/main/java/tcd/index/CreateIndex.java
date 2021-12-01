@@ -31,7 +31,7 @@ public class CreateIndex {
 	private Directory directory;
 	private IndexWriterConfig config;
 	private IndexWriter iwriter;
-	private Similarity indexSimilarity = new BM25Similarity();
+	private Similarity indexSimilarity = new BM25Similarity(0.9f, 0.85f);
 	
     public String MapTag(String tag)
     {

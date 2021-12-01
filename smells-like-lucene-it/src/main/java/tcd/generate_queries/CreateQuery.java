@@ -51,7 +51,7 @@ public class CreateQuery {
 	private static Elements topics;
 	private static final int MAX_RESULTS = 1000;
 	private String runName="";
-	private Similarity runSimilarity = new BM25Similarity();
+	private Similarity runSimilarity = new BM25Similarity(0.9f, 0.85f);
 	//private Float contentBoost = 5.35f;
 	private Float contentBoost = 7f;
 	private Float titleBoost = 1f;
@@ -60,6 +60,7 @@ public class CreateQuery {
 	private Float topicTitleBoost = 4f;
 	private Float topicDescriptionBoost = 2.5f;
 	private Float topicNarrativeBoost = 1f;
+	private Float geoBoost = 1f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
 		this.runName=runName;
@@ -129,6 +130,9 @@ public class CreateQuery {
 		//fieldBoosts.put("title", titleBoost);
 		
 		fieldBoosts.put(CONTENT, contentBoost);	
+		fieldBoosts.put(TITLE, titleBoost);
+		fieldBoosts.put(OTHER, otherBoost);
+		
 		//MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE },new MyCustomAnalyzer(), fieldBoosts);
 		MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE, OTHER },new MyCustomAnalyzer(), fieldBoosts);
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
@@ -136,11 +140,26 @@ public class CreateQuery {
 		
 		String file = "../cities.txt";
 		List<String> geoNames = new ArrayList<String>(); 
+//		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+//		    String line;
+//		    while ((line = br.readLine()) != null) {
+//		    	System.out.println(line);
+//		    	System.out.println(line.split(" ")[0]);
+//		    	System.out.println(line.split(" ")[1]);
+//		       geoNames.add(line.split(" ")[0]);
+//		       geoNames.add(line.split(" ")[1]);
+//		    }
+//		}
+		
+		file = "countries.txt";
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
-		       geoNames.add(line.split(" ")[0]);
-		       geoNames.add(line.split(" ")[1]);
+		    	System.out.println(line);
+		    	//System.out.println(line.split(" ")[0]);
+		    	//System.out.println(line.split(" ")[1]);
+		    	geoNames.add(line);
+		       //geoNames.add(line.split(" ")[1]);
 		    }
 		}
 		
@@ -200,15 +219,18 @@ public class CreateQuery {
 			for (String name : geoNames) {
 				if(title.contains(name))
 				{
-					geoTitle += name;
-					//System.out.println(geoTitle);
+					geoTitle += name+" ";
+					System.out.println(geoTitle);
 				}
 				if(description.contains(name))
 				{
-					geoDescription += name;
-					//System.out.println(geoDescription);
+					geoDescription += name+" ";
+					System.out.println(geoDescription);
 				}
 			}
+			
+			String geoString = geoDescription+geoTitle;
+			System.out.println(geoString);
 
 //			System.out.println(narrative);
 //			System.out.println("RELEVANT");
@@ -216,6 +238,7 @@ public class CreateQuery {
 //			System.out.println("NOT RELEVANT");
 //			System.out.println(mustNotNarr);
 
+			
 
 			//Previously used newNarr in query, not narrative string
 			
@@ -226,30 +249,26 @@ public class CreateQuery {
 			Query topicDescriptionQuery = multiqp.parse(MultiFieldQueryParser.escape(description));
 			//Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(narrative));
 			Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(newNarr));
+
 			
 			Query boostedTopicTitle = new BoostQuery(topicTitleQuery, topicTitleBoost);
 			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, topicDescriptionBoost);
 			Query boostedTopicNarrative = new BoostQuery(topicNarrativeQuery, topicNarrativeBoost);
 			
-			
-			
-			//String forOther = newNarr + " " + title + " " + description;
-			//Query testOther = new TermQuery(new Term(OTHER, forOther));
-			//Query testOtherForTitle = new TermQuery(new Term(TITLE, forOther));
-			//Query mustNotQuery = new TermQuery(new Term(OTHER, mustNotNarr));
-
-			//Query boostedQ1 = new BoostQuery(q1, 1.5F);
-			//Query boostedQ2 = new BoostQuery(q2, 2.5F);
-			//Query boostedOther = new BoostQuery(testOther, 2.5F);
-			//Query boostedTestOtherForTitle = new BoostQuery(testOtherForTitle, 2.5F);
-			//Query boostedMustNot = new BoostQuery(mustNotQuery, 1.5F);
-
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
 
 			
 			newBooleanQuery.add(boostedTopicTitle, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedTopicDescription, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedTopicNarrative, BooleanClause.Occur.SHOULD);
+			
+			if (! geoString.equals("")) {
+				Query geoQuery = multiqp.parse(MultiFieldQueryParser.escape(geoString));
+				Query boostedGeoQuery = new BoostQuery(geoQuery, geoBoost);
+				//newBooleanQuery.add(boostedGeoQuery, BooleanClause.Occur.SHOULD);
+				
+			}
+			
 			
 			//Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
 			Query newQuery = newBooleanQuery.build();
