@@ -185,12 +185,12 @@ public class CreateQuery {
 				if(title.contains(name))
 				{
 					geoTitle += name;
-					System.out.println(geoTitle);
+					//System.out.println(geoTitle);
 				}
 				if(description.contains(name))
 				{
 					geoDescription += name;
-					System.out.println(geoDescription);
+					//System.out.println(geoDescription);
 				}
 			}
 
