@@ -125,7 +125,7 @@ public class CreateQuery {
 		org.jsoup.nodes.Document doc = Jsoup.parse(new File(tempFile), "UTF-8", "");
 		topics = doc.body().select("top");
 
-		QueryParser parser = new QueryParser("content", new EnglishAnalyzer());
+		QueryParser parser = new QueryParser("content", new MyCustomAnalyzer());
 		HashMap<String, Float> fieldBoosts = new HashMap<String, Float>(); 
 		//fieldBoosts.put("title", titleBoost);
 		
