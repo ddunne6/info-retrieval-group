@@ -47,7 +47,7 @@ public class MyCustomAnalyzer extends Analyzer {
 
 	public MyCustomAnalyzer() {
 		super();
-		this.stemmer = "Porter";
+		this.stemmer = "Hunspell";
 	}
 
 	public MyCustomAnalyzer(String stem_name) {
