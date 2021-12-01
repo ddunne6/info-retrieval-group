@@ -24,6 +24,7 @@ public class App {
 	
 	private static String runName = "";
 	private static Similarity runSimilarity = new BM25Similarity();
+	private static float stopwordThreshold = 999f;
 	//private static Float customBoost = 5.35f;
 
 
@@ -141,7 +142,29 @@ public class App {
 							//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
 					}		
 				}
-			}			
+			}
+			else if ("analyze-stopwords".equals(args[0])) {
+				float[] stopwordThresholds = {90f, 0f, 80f, 70f, 60f, 50f, 40f, 30f, 20f, 10f, 0f};
+				for(float threshold : stopwordThresholds) {
+					runName = "stopwords_at_" + threshold;
+					stopwordThreshold = threshold;
+					System.out.println(runName);
+					
+					try {
+						parseAndIndexCorpus();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					try {
+						CreateQuery createQuery = new CreateQuery(runName, runSimilarity, threshold);
+						createQuery.queryTopics();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS));
+				}
+			}
 			else {
 				System.out.println("Invalid arguments");
 			}
@@ -157,10 +180,17 @@ public class App {
 		List<String> foreignBroadcastISFiles = getAllForeignBroadcastISFiles();
 		// Get Each file for Los Angeles Times
 		List<String> losAngelosTimesFiles = getAllLATimesFiles();
-
+		
+		CreateIndex createIndex;
 		// Clear temporary folder
 		clearTempDirectory(new File(TEMP_FOLDER));
-		CreateIndex createIndex = new CreateIndex(runName, runSimilarity);
+		if (stopwordThreshold <= 100f) {
+			createIndex = new CreateIndex(runName, runSimilarity, stopwordThreshold);
+		}
+		else {
+			createIndex = new CreateIndex(runName, runSimilarity);
+		}
+
 		List<CustomDocument> documents = new ArrayList<CustomDocument>();
 
 		System.out.println("STARTING Parsing and Indexing...");

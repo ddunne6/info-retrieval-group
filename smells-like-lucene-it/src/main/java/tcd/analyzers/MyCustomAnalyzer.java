@@ -44,7 +44,7 @@ import static tcd.constants.Dictionaries.*;
 public class MyCustomAnalyzer extends Analyzer {
 
 	private String stemmer;
-	CharArraySet customStopwords = StopFilter.makeStopSet(CustomStopWords.getStopWords(80f));
+	CharArraySet customStopwords;
 
 	public MyCustomAnalyzer() {
 		super();
@@ -54,6 +54,12 @@ public class MyCustomAnalyzer extends Analyzer {
 	public MyCustomAnalyzer(String stem_name) {
 		super();
 		this.stemmer = stem_name;
+	}
+	
+	public MyCustomAnalyzer(float stopwordThreshold) {
+		super();
+		this.stemmer = "Porter";
+		this.customStopwords = StopFilter.makeStopSet(CustomStopWords.getStopWords(stopwordThreshold));
 	}
 
 	@Override
