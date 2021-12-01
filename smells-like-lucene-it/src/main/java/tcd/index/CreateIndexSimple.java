@@ -24,6 +24,7 @@ import tcd.analyzers.MyCustomAnalyzer;
 import tcd.parse.CustomDocument;
 import tcd.parse.CustomTag;
 
+@Deprecated
 public class CreateIndexSimple {
 	private Directory directory;
 	private IndexWriterConfig config;
