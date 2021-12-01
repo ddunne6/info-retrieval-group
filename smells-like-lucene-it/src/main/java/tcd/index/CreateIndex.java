@@ -68,12 +68,14 @@ public class CreateIndex {
     		case "HEADLINE":
     		case "TI":    		
     		case "DOCTITLE":
-    		case "H3":
-    		case "H4":
+    		//case "H3":
+    		//case "H4":
     		case "H5":
     		case "H6":
     			return TITLE;
     		case "TEXT":
+    		case "H3":
+    		case "H4":
     		case "SUMMARY":
     		case "FURTHER":
     		case "SUPPLEM":
@@ -121,8 +123,8 @@ public class CreateIndex {
 				{
 					if(tempOtherInfo.getTag().equals("H3")) {
 						
-						System.out.println(tempOtherInfo.getTag());
-						System.out.println("Content is: "+tempOtherInfo.getContentAsString());
+						//System.out.println(tempOtherInfo.getTag());
+						//System.out.println("Content is: "+tempOtherInfo.getContentAsString());
 					}
 					//System.out.println("Title tag is: "+tempOtherInfo.getTag());
 					//System.out.println("Title is: "+tempOtherInfo.getContentAsString());

@@ -126,7 +126,7 @@ public class App {
 								//Float runBoost2 = 2.5f;
 								//boostType sets what we're boosting
 								String boostType = "field";
-								runName = "FieldBoosts_ContentBoost_"+runBoost1+"_TitleBoost_"+runBoost2+"_OtherBoost_"+runBoost3;
+								runName = "_FieldBoosts_ContentBoost_"+runBoost1+"_TitleBoost_"+runBoost2+"_OtherBoost_"+runBoost3;
 								//customBoost is the boost value that we're looping through
 								
 								//runName = "_TopicBoosts_TitleBoost_"+runBoost1+"_DescriptionBoost_"+runBoost2+"_NewNarrBoost_"+runBoost3;
