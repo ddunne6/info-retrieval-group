@@ -155,7 +155,7 @@ public class CreateQuery {
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
-		    	System.out.println(line);
+		    	//System.out.println(line);
 		    	//System.out.println(line.split(" ")[0]);
 		    	//System.out.println(line.split(" ")[1]);
 		    	geoNames.add(line);
