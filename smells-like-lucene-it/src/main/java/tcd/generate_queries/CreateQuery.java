@@ -1,11 +1,15 @@
 package tcd.generate_queries;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.io.FileWriter;
 
 import org.apache.lucene.index.DirectoryReader;
@@ -48,8 +52,10 @@ public class CreateQuery {
 	private static final int MAX_RESULTS = 1000;
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity();
-	private Float contentBoost = 5.35f;
+	//private Float contentBoost = 5.35f;
+	private Float contentBoost = 7f;
 	private Float titleBoost = 1f;
+	private Float otherBoost = 1f;
 	//private Float topicTitleBoost = 2.35f;
 	private Float topicTitleBoost = 4f;
 	private Float topicDescriptionBoost = 2.5f;
@@ -73,6 +79,24 @@ public class CreateQuery {
 			System.out.println("Boosting Topic");
 			this.topicTitleBoost = customBoost1;
 			this.topicDescriptionBoost = customBoost2;
+			
+		}
+	}
+	public CreateQuery(String runName, Similarity runSimilarity, String boostString, Float customBoost1, Float customBoost2, Float customBoost3) {
+		this.runName=runName;
+		this.runSimilarity = runSimilarity;
+		
+		if(boostString.equals("field")) {
+		System.out.println("Boosting Content Field");
+		this.contentBoost = customBoost1;
+		this.titleBoost = customBoost2;
+		this.otherBoost = customBoost3;
+		
+		} else if(boostString.equals("topic")) {		
+			System.out.println("Boosting Topic");
+			this.topicTitleBoost = customBoost1;
+			this.topicDescriptionBoost = customBoost2;
+			this.topicNarrativeBoost = customBoost3;
 			
 		}
 	}
@@ -105,9 +129,21 @@ public class CreateQuery {
 		//fieldBoosts.put("title", titleBoost);
 		
 		fieldBoosts.put(CONTENT, contentBoost);	
-		MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE },new MyCustomAnalyzer(), fieldBoosts);
+		//MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE },new MyCustomAnalyzer(), fieldBoosts);
+		MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE, OTHER },new MyCustomAnalyzer(), fieldBoosts);
 		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
 
+		
+		String file = "../cities.txt";
+		List<String> geoNames = new ArrayList<String>(); 
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       geoNames.add(line.split(" ")[0]);
+		       geoNames.add(line.split(" ")[1]);
+		    }
+		}
+		
 		// Iterate through topic tags & structure queries
     	for(Element t : topics) {
     		String title = t.select("title").text();
@@ -157,15 +193,33 @@ public class CreateQuery {
 				if(mustNotNarr != "")
 					mustNotNarr += ".";
 			}
+			
+			String geoTitle = "";
+			String geoDescription = "";
+			
+			for (String name : geoNames) {
+				if(title.contains(name))
+				{
+					geoTitle += name;
+					//System.out.println(geoTitle);
+				}
+				if(description.contains(name))
+				{
+					geoDescription += name;
+					//System.out.println(geoDescription);
+				}
+			}
 
-			//System.out.println(narrative);
-			//System.out.println("RELEVANT");
-			//System.out.println(newNarr);
-			//System.out.println("NOT RELEVANT");
-			//System.out.println(mustNotNarr);
+//			System.out.println(narrative);
+//			System.out.println("RELEVANT");
+//			System.out.println(newNarr);
+//			System.out.println("NOT RELEVANT");
+//			System.out.println(mustNotNarr);
+
+
 			//Previously used newNarr in query, not narrative string
 			
-			String fullDescriptionForQuery = description + newNarr;
+			//String fullDescriptionForQuery = description + newNarr;
 			//System.out.println(fullDescriptionForQuery);
 			
 			Query topicTitleQuery = multiqp.parse(MultiFieldQueryParser.escape(title));

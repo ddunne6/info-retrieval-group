@@ -114,31 +114,35 @@ public class App {
 				//float[] contentBoostArray = {1.4f, 1.45f, 1.5f, 1.55f, 1.6f, 1.65f, 1.7f, 1.75f, 1.8f, 1.85f, 1.9f, 1.95f, 2.0f,
 				//2.05f,2.1f, 2.15f, 2.2f, 2.25f, 2.3f, 2.35f, 2.4f, 2.45f, 2.5f, 2.55f, 2.6f, 2.65f, 2.7f, 2.75f, 2.8f, 2.85f, 2.9f, 2.95f, 3.0f};
 				
-				float[] contentBoostArray = {0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 3.5f, 4f, 4.5f, 5f, 5.5f, 6f, 6.5f, 7f, 7.5f, 8f, 8.5f, 9f};
+				float[] contentBoostArray = {4.5f, 5f, 5.5f, 6f, 6.5f, 7f, 7.5f, 8f, 8.5f, 9f};
+				float[] topicBoostArray = {0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 3.5f, 4f, 4.5f, 5f, 5.5f, 6f, 6.5f, 7f, 7.5f, 8f, 8.5f, 9f};
 				
 				for(float runBoost1 : contentBoostArray) {
-					for(float runBoost2 : contentBoostArray) {	
-
-						//runSimilarity = new BM25Similarity(k1param, bparam);
-					
-						//boostType sets what we're boosting
-						String boostType = "topic";
+						for(float runBoost2 : topicBoostArray) {	
+							for(float runBoost3 : topicBoostArray) {
+								//runSimilarity = new BM25Similarity(k1param, bparam);
+							
+								//Float runBoost1 = 4f;
+								//Float runBoost2 = 2.5f;
+								//boostType sets what we're boosting
+								String boostType = "field";
+								runName = "FieldBoosts_ContentBoost_"+runBoost1+"_TitleBoost_"+runBoost2+"_OtherBoost_"+runBoost3;
+								//customBoost is the boost value that we're looping through
+								
+								//runName = "_TopicBoosts_TitleBoost_"+runBoost1+"_DescriptionBoost_"+runBoost2+"_NewNarrBoost_"+runBoost3;
+								System.out.println(runName);
+									
+									
+									try {
+										generateQueriesAnalysis(boostType, runBoost1, runBoost2, runBoost3);
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+							
+									
 						
-						//customBoost is the boost value that we're looping through
-						
-						runName = "_TopicBoosts_TitleBoost_"+runBoost1+"_DescriptionBoost_"+runBoost2;
-						System.out.println(runName);
-							
-							
-							try {
-								generateQueriesAnalysis(boostType, runBoost1, runBoost2);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-					
-							
-							//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
+							}//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
 					}		
 				}
 			}			
@@ -205,8 +209,8 @@ public class App {
 	
 	//This method takes a boostString and boostFloat for analyzing performance over a range of boost values
 	//Only called in when the 'analyze-boost' argument is passed.
-	private static void generateQueriesAnalysis(String boostString, Float boostFloat1, Float boostFloat2) throws IOException, ParseException {
-		CreateQuery createQuery = new CreateQuery(runName, runSimilarity, boostString,boostFloat1,boostFloat2);
+	private static void generateQueriesAnalysis(String boostString, Float boostFloat1, Float boostFloat2, Float boostFloat3) throws IOException, ParseException {
+		CreateQuery createQuery = new CreateQuery(runName, runSimilarity, boostString,boostFloat1,boostFloat2, boostFloat3);
 		createQuery.queryTopics();
 	}
 	

@@ -49,10 +49,6 @@ public class CreateIndex {
     		case "ACTION":
     		case "DATE1":
     		case "HT":
-    		case "H3":
-    		case "H4":
-    		case "H5":
-    		case "H6":
     		case "AU":
     		case "F":
     		case "PARENT":
@@ -72,6 +68,10 @@ public class CreateIndex {
     		case "HEADLINE":
     		case "TI":    		
     		case "DOCTITLE":
+    		case "H3":
+    		case "H4":
+    		case "H5":
+    		case "H6":
     			return TITLE;
     		case "TEXT":
     		case "SUMMARY":
@@ -119,11 +119,16 @@ public class CreateIndex {
 				Mappedtag = MapTag(tempOtherInfo.getTag());
 				if (Mappedtag.equals(TITLE))
 				{
+					if(tempOtherInfo.getTag().equals("H3")) {
+						
+						System.out.println(tempOtherInfo.getTag());
+						System.out.println("Content is: "+tempOtherInfo.getContentAsString());
+					}
 					//System.out.println("Title tag is: "+tempOtherInfo.getTag());
 					//System.out.println("Title is: "+tempOtherInfo.getContentAsString());
 					document.add(new TextField(TITLE, tempOtherInfo.getContentAsString(), Field.Store.YES));
 				} 
-				else
+				else if (Mappedtag.equals(CONTENT))
 				{
 					if(tempOtherInfo.getTag().equals("H3")) {
 						
@@ -133,6 +138,10 @@ public class CreateIndex {
 					//System.out.println("Tag is: "+tempOtherInfo.getTag());
 					//System.out.println("Content is: "+tempOtherInfo.getContentAsString());
 					document.add(new TextField(CONTENT, tempOtherInfo.getContentAsString(), Field.Store.YES));
+				} else
+				{
+					
+					document.add(new TextField(OTHER, tempOtherInfo.getContentAsString(), Field.Store.YES));
 				}
 			}
 			indexedDocuments.add(document);
