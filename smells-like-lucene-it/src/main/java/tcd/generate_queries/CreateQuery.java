@@ -239,7 +239,7 @@ public class CreateQuery {
 			}
 			
 			//String geoString = geoDescription+geoTitle;
-			System.out.println(geoString);
+			//System.out.println(geoString);
 
 //			System.out.println(narrative);
 //			System.out.println("RELEVANT");
