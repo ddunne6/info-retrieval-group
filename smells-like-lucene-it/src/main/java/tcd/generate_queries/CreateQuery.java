@@ -53,11 +53,9 @@ public class CreateQuery {
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity(0.9f, 0.85f);
 	//private Similarity runSimilarity = new BM25Similarity();
-	//private Float contentBoost = 5.35f;
 	private Float contentBoost = 6f;
 	private Float titleBoost = 1f;
 	private Float otherBoost = 0.5f;
-	//private Float topicTitleBoost = 2.35f;
 	private Float topicTitleBoost = 4f;
 	private Float topicDescriptionBoost = 2.5f;
 	private Float topicNarrativeBoost = 1f;
@@ -242,18 +240,6 @@ public class CreateQuery {
 			//String geoString = geoDescription+geoTitle;
 			//System.out.println(geoString);
 
-//			System.out.println(narrative);
-//			System.out.println("RELEVANT");
-//			System.out.println(newNarr);
-//			System.out.println("NOT RELEVANT");
-//			System.out.println(mustNotNarr);
-
-			
-
-			//Previously used newNarr in query, not narrative string
-			
-			//String fullDescriptionForQuery = description + newNarr;
-			//System.out.println(fullDescriptionForQuery);
 			
 			Query topicTitleQuery = multiqp.parse(MultiFieldQueryParser.escape(title));
 			Query topicDescriptionQuery = multiqp.parse(MultiFieldQueryParser.escape(description));
@@ -279,12 +265,8 @@ public class CreateQuery {
 				
 			}
 			
-			
-			//Query newQuery = parser.parse(QueryParserBase.escape(newBooleanQuery.build().toString()));
 			Query newQuery = newBooleanQuery.build();
-			//System.out.println(newQuery.toString());
-			
-			
+
 			// Get query results from the index searcher
             ScoreDoc[] hits = isearcher.search(newQuery, MAX_RESULTS).scoreDocs;
             //System.out.println(hits.length);
