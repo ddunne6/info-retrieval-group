@@ -31,7 +31,7 @@ public class CreateIndex {
 	private Directory directory;
 	private IndexWriterConfig config;
 	private IndexWriter iwriter;
-	private Similarity indexSimilarity = new BM25Similarity();
+	private Similarity indexSimilarity = new BM25Similarity(0.9f, 0.85f);
 	
     public String MapTag(String tag)
     {
@@ -68,12 +68,14 @@ public class CreateIndex {
     		case "HEADLINE":
     		case "TI":    		
     		case "DOCTITLE":
-    		case "H3":
-    		case "H4":
+    		//case "H3":
+    		//case "H4":
     		case "H5":
     		case "H6":
     			return TITLE;
     		case "TEXT":
+    		case "H3":
+    		case "H4":
     		case "SUMMARY":
     		case "FURTHER":
     		case "SUPPLEM":

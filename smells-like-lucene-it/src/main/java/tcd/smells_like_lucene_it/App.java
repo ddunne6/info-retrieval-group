@@ -23,6 +23,7 @@ import org.apache.lucene.search.similarities.Similarity;
 public class App {
 	
 	private static String runName = "";
+	//private static Similarity runSimilarity = new BM25Similarity(0.9f, 0.85f);
 	private static Similarity runSimilarity = new BM25Similarity();
 	//private static Float customBoost = 5.35f;
 
@@ -101,33 +102,17 @@ public class App {
 				
 				System.out.println("Analyzing Boosts");
 				
-				
-//				float[] contentBoostArray = {0.1f, 0.15f, 0.2f, 0.25f, 0.3f, 0.35f, 0.4f, 0.45f, 0.5f, 0.55f, 0.6f, 0.65f, 0.7f, 0.75f, 0.8f, 0.85f, 0.9f, 0.95f, 1.0f,
-//							1.05f,1.1f, 1.15f, 1.2f, 1.25f, 1.3f, 1.35f, 1.4f, 1.45f, 1.5f, 1.55f, 1.6f, 1.65f, 1.7f, 1.75f, 1.8f, 1.85f, 1.9f, 1.95f, 2.0f,
-//							2.05f,2.1f, 2.15f, 2.2f, 2.25f, 2.3f, 2.35f, 2.4f, 2.45f, 2.5f, 2.55f, 2.6f, 2.65f, 2.7f, 2.75f, 2.8f, 2.85f, 2.9f, 2.95f, 3.0f};
-				
-				//float[] contentBoostArray = {4f, 4.3f, 4.6f, 5f, 5.5f, 6f, 6.5f};
-				//float[] contentBoostArray = {7f, 7.5f, 8f, 8.5f, 9f, 9.5f, 10f};
-//				float[] contentBoostArray = {4.05f,4.1f, 4.15f, 4.2f, 4.25f, 4.3f, 4.35f, 4.4f, 4.45f, 4.5f, 4.55f, 4.6f, 4.65f, 4.7f, 4.75f, 4.8f, 4.85f, 4.9f, 4.95f, 5.0f,
-//											5.05f,5.1f, 5.15f, 5.2f, 5.25f, 5.3f, 5.35f, 5.4f, 5.45f, 5.5f, 5.55f, 5.6f, 5.65f, 5.7f, 5.75f, 5.8f, 5.85f, 5.9f, 5.95f, 6.0f,
-//											6.05f,6.1f, 6.15f, 6.2f, 6.25f, 6.3f, 6.35f, 6.4f, 6.45f, 6.5f, 6.55f, 6.6f, 6.65f, 6.7f, 6.75f, 6.8f, 6.85f, 6.9f, 6.95f, 7.0f};
-				//float[] contentBoostArray = {1.4f, 1.45f, 1.5f, 1.55f, 1.6f, 1.65f, 1.7f, 1.75f, 1.8f, 1.85f, 1.9f, 1.95f, 2.0f,
-				//2.05f,2.1f, 2.15f, 2.2f, 2.25f, 2.3f, 2.35f, 2.4f, 2.45f, 2.5f, 2.55f, 2.6f, 2.65f, 2.7f, 2.75f, 2.8f, 2.85f, 2.9f, 2.95f, 3.0f};
-				
-				float[] contentBoostArray = {4.5f, 5f, 5.5f, 6f, 6.5f, 7f, 7.5f, 8f, 8.5f, 9f};
+				float[] contentBoostArray = {1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f};
 				float[] topicBoostArray = {0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 3.5f, 4f, 4.5f, 5f, 5.5f, 6f, 6.5f, 7f, 7.5f, 8f, 8.5f, 9f};
 				
 				for(float runBoost1 : contentBoostArray) {
 						for(float runBoost2 : topicBoostArray) {	
-							for(float runBoost3 : topicBoostArray) {
-								//runSimilarity = new BM25Similarity(k1param, bparam);
-							
-								//Float runBoost1 = 4f;
-								//Float runBoost2 = 2.5f;
+							for(float runBoost3 : topicBoostArray) {				
+
 								//boostType sets what we're boosting
 								String boostType = "field";
-								runName = "FieldBoosts_ContentBoost_"+runBoost1+"_TitleBoost_"+runBoost2+"_OtherBoost_"+runBoost3;
-								//customBoost is the boost value that we're looping through
+								runName = "_FieldBoosts_ContentBoost_"+runBoost1+"_TitleBoost_"+runBoost2+"_OtherBoost_"+runBoost3;
+								
 								
 								//runName = "_TopicBoosts_TitleBoost_"+runBoost1+"_DescriptionBoost_"+runBoost2+"_NewNarrBoost_"+runBoost3;
 								System.out.println(runName);
@@ -142,10 +127,39 @@ public class App {
 							
 									
 						
-							}//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
+							}
 					}		
 				}
-			}			
+			}
+			else if("evaluate".equals(args[0])) {
+				
+				System.out.println("Final Evaluation");
+				
+				
+				runName = "_config_1";
+				
+				try {
+					generateQueries();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				runName = "_config_2";
+				String boostType = "field";
+				Float contentBoost = 7f;
+				Float titleBoost = 1f;
+				Float otherBoost = 1f;
+				
+				try {
+					generateQueriesAnalysis(boostType,contentBoost,titleBoost,otherBoost);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			}
 			else {
 				System.out.println("Invalid arguments");
 			}
