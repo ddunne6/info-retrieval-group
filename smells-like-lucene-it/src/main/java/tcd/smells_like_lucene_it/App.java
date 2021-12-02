@@ -23,7 +23,8 @@ import org.apache.lucene.search.similarities.Similarity;
 public class App {
 	
 	private static String runName = "";
-	private static Similarity runSimilarity = new BM25Similarity(0.9f, 0.85f);
+	//private static Similarity runSimilarity = new BM25Similarity(0.9f, 0.85f);
+	private static Similarity runSimilarity = new BM25Similarity();
 	//private static Float customBoost = 5.35f;
 
 
@@ -146,7 +147,36 @@ public class App {
 							}//clearTempDirectory(new File(INDEX_DIRECTORY_CORPUS+runName));
 					}		
 				}
-			}			
+			}
+			else if("evaluate".equals(args[0])) {
+				
+				System.out.println("Final Evaluation");
+				
+				
+				runName = "_config_1";
+				
+				try {
+					generateQueries();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				runName = "_config_2";
+				String boostType = "field";
+				Float contentBoost = 7f;
+				Float titleBoost = 1f;
+				Float otherBoost = 1f;
+				
+				try {
+					generateQueriesAnalysis(boostType,contentBoost,titleBoost,otherBoost);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			}
 			else {
 				System.out.println("Invalid arguments");
 			}

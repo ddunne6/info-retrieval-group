@@ -52,10 +52,11 @@ public class CreateQuery {
 	private static final int MAX_RESULTS = 1000;
 	private String runName="";
 	private Similarity runSimilarity = new BM25Similarity(0.9f, 0.85f);
+	//private Similarity runSimilarity = new BM25Similarity();
 	//private Float contentBoost = 5.35f;
-	private Float contentBoost = 7f;
+	private Float contentBoost = 6f;
 	private Float titleBoost = 1f;
-	private Float otherBoost = 1f;
+	private Float otherBoost = 0.5f;
 	//private Float topicTitleBoost = 2.35f;
 	private Float topicTitleBoost = 4f;
 	private Float topicDescriptionBoost = 2.5f;
