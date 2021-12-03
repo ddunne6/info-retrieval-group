@@ -59,7 +59,7 @@ public class CreateQuery {
 	private Float topicTitleBoost = 4f;
 	private Float topicDescriptionBoost = 2.5f;
 	private Float topicNarrativeBoost = 1f;
-	private Float geoBoost = 1f;
+	private Float geoBoost = 2f;
 	
 	public CreateQuery(String runName, Similarity runSimilarity) {
 		this.runName=runName;
@@ -212,30 +212,54 @@ public class CreateQuery {
 					mustNotNarr += ".";
 			}
 			
-			String geoTitle = "";
-			String geoDescription = "";
-			String geoString = "";
+			String geoCountriesTitle = "";
+			String geoCountriesDescription = "";
+			String geoCountriesString = "";
 			
 			for (String name : geoNames) {
 				if(title.contains(name))
 				{
 					//geoTitle += name+" ";
-					geoString += name+" ";
-					if (!geoString.contains(name)) {
-						geoString += name+" ";
+					//geoCountriesString += name+" ";
+					if (!geoCountriesString.contains(name)) {
+						geoCountriesString += name+" ";
 					}
 					//System.out.println(geoTitle);
 				}
 				if(description.contains(name))
 				{
-					geoDescription += name+" ";
+					geoCountriesDescription += name+" ";
 					
-					if (!geoString.contains(name)) {
-						geoString += name+" ";
+					if (!geoCountriesString.contains(name)) {
+						geoCountriesString += name+" ";
 					}
 					//System.out.println(geoDescription);
 				}
 			}
+
+			// Geo Boost for cities
+			String geoCitiesString = "";
+
+			String citiesFile = "../worldcities.csv";
+			BufferedReader reader = new BufferedReader(new FileReader(citiesFile));
+			
+			String row;
+			while((row = reader.readLine()) != null){
+				String[] rowData = row.split(",");
+				String city = rowData[0];
+				
+				if(title.contains(city) && !geoCitiesString.contains(city)){
+					geoCitiesString += city + " ";
+				}
+				if(description.contains(city)){
+					if(!geoCitiesString.contains(city)){
+						geoCitiesString += city + " ";
+					}
+				}
+			}
+			reader.close();
+			
+			//System.out.println(geoCitiesString);
 			
 			//String geoString = geoDescription+geoTitle;
 			//System.out.println(geoString);
@@ -258,11 +282,16 @@ public class CreateQuery {
 			newBooleanQuery.add(boostedTopicDescription, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedTopicNarrative, BooleanClause.Occur.SHOULD);
 			
-			if (! geoString.equals("")) {
-				Query geoQuery = multiqp.parse(MultiFieldQueryParser.escape(geoString));
+			if (!geoCountriesString.equals("")) {
+				Query geoQuery = multiqp.parse(MultiFieldQueryParser.escape(geoCountriesString));
 				Query boostedGeoQuery = new BoostQuery(geoQuery, geoBoost);
-				//newBooleanQuery.add(boostedGeoQuery, BooleanClause.Occur.SHOULD);
-				
+				newBooleanQuery.add(boostedGeoQuery, BooleanClause.Occur.SHOULD);
+			}
+			
+			if(!geoCitiesString.equals("")) {
+				Query geoCitiesQuery = multiqp.parse(MultiFieldQueryParser.escape(geoCitiesString));
+				Query boostedGeoQuery = new BoostQuery(geoCitiesQuery, geoBoost);
+				newBooleanQuery.add(boostedGeoQuery, BooleanClause.Occur.SHOULD);
 			}
 			
 			Query newQuery = newBooleanQuery.build();

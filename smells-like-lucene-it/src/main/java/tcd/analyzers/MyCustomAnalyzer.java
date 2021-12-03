@@ -26,6 +26,7 @@ import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
 import org.apache.lucene.analysis.synonym.SynonymMap;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import tcd.mappings.MySynonymMap;
 
@@ -66,6 +67,8 @@ public class MyCustomAnalyzer extends Analyzer {
 			MySynonymMap synMap = new MySynonymMap();
 			result = new FlattenGraphFilter(new SynonymGraphFilter(result, synMap.createSynonymMap(), true));
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
