@@ -30,7 +30,7 @@ public class MySynonymMap{
                 String[] rowData = row.split(",");
                 //System.out.println("City: " + rowData[0] + " Country: " + rowData[4]);
                 
-                builder.add(new CharsRef(rowData[0].toLowerCase()), new CharsRef(rowData[4].toLowerCase()), true);
+                builder.add(new CharsRef(rowData[1].toLowerCase()), new CharsRef(rowData[4].toLowerCase()), true);
             }
             while(ukUsInput.hasNext()){
                 String[] ukAndUsMapping = ukUsInput.nextLine().split(" ");
