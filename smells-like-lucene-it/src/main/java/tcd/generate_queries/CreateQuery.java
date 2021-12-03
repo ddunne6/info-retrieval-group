@@ -236,30 +236,6 @@ public class CreateQuery {
 					//System.out.println(geoDescription);
 				}
 			}
-
-			// Geo Boost for cities
-			String geoCitiesString = "";
-
-			String citiesFile = "../worldcities.csv";
-			BufferedReader reader = new BufferedReader(new FileReader(citiesFile));
-			
-			String row;
-			while((row = reader.readLine()) != null){
-				String[] rowData = row.split(",");
-				String city = rowData[0];
-				
-				if(title.contains(city) && !geoCitiesString.contains(city)){
-					geoCitiesString += city + " ";
-				}
-				if(description.contains(city)){
-					if(!geoCitiesString.contains(city)){
-						geoCitiesString += city + " ";
-					}
-				}
-			}
-			reader.close();
-			
-			//System.out.println(geoCitiesString);
 			
 			//String geoString = geoDescription+geoTitle;
 			//System.out.println(geoString);
@@ -285,12 +261,6 @@ public class CreateQuery {
 			if (!geoCountriesString.equals("")) {
 				Query geoQuery = multiqp.parse(MultiFieldQueryParser.escape(geoCountriesString));
 				Query boostedGeoQuery = new BoostQuery(geoQuery, geoBoost);
-				newBooleanQuery.add(boostedGeoQuery, BooleanClause.Occur.SHOULD);
-			}
-			
-			if(!geoCitiesString.equals("")) {
-				Query geoCitiesQuery = multiqp.parse(MultiFieldQueryParser.escape(geoCitiesString));
-				Query boostedGeoQuery = new BoostQuery(geoCitiesQuery, geoBoost);
 				newBooleanQuery.add(boostedGeoQuery, BooleanClause.Occur.SHOULD);
 			}
 			
