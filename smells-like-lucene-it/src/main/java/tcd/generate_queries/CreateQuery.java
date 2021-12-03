@@ -194,6 +194,7 @@ public class CreateQuery {
 			for (String name : geoNames) {
 				if(title.contains(name))
 				{
+
 					if (!geoCountriesString.contains(name)) {
 						geoCountriesString += name+" ";
 					}
