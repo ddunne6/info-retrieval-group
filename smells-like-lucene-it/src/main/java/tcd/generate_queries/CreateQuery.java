@@ -51,7 +51,7 @@ public class CreateQuery {
 	private static Elements topics;
 	private static final int MAX_RESULTS = 1000;
 	private String runName="";
-	private Similarity runSimilarity = new BM25Similarity(0.9f, 0.85f);
+	private Similarity runSimilarity = new BM25Similarity(0.6f,0.85f);
 	//private Similarity runSimilarity = new BM25Similarity();
 	private Float contentBoost = 6f;
 	private Float titleBoost = 1f;
