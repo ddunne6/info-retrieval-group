@@ -132,33 +132,14 @@ public class CreateQuery {
 		fieldBoosts.put(TITLE, titleBoost);
 		fieldBoosts.put(OTHER, otherBoost);
 		
-		//MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE },new MyCustomAnalyzer(), fieldBoosts);
 		MultiFieldQueryParser multiqp = new MultiFieldQueryParser(new String[] { CONTENT, TITLE, OTHER },new MyCustomAnalyzer(), fieldBoosts);
-		//QueryParser titleParser = new QueryParser("title", new MyCustomAnalyzer());
-
 		
-		String file = "../cities.txt";
 		List<String> geoNames = new ArrayList<String>(); 
-//		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-//		    String line;
-//		    while ((line = br.readLine()) != null) {
-//		    	System.out.println(line);
-//		    	System.out.println(line.split(" ")[0]);
-//		    	System.out.println(line.split(" ")[1]);
-//		       geoNames.add(line.split(" ")[0]);
-//		       geoNames.add(line.split(" ")[1]);
-//		    }
-//		}
-		
-		file = "countries.txt";
+		String file = "countries.txt";
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
-		    	//System.out.println(line);
-		    	//System.out.println(line.split(" ")[0]);
-		    	//System.out.println(line.split(" ")[1]);
 		    	geoNames.add(line);
-		       //geoNames.add(line.split(" ")[1]);
 		    }
 		}
 		
@@ -169,8 +150,6 @@ public class CreateQuery {
 			String narrative = t.select("narr").text();
     		String queryId = t.select("num").text();
     		
-    		//System.out.println(narrative);
-
     		// little bit of preprocessing
     		int startIndex = "Description:".length() + 1;
     		int indexOfNarr = description.indexOf("Narrative:");
@@ -179,15 +158,11 @@ public class CreateQuery {
     		
     		int queryNumIndex = queryId.indexOf("Number: ") + "Number: ".length();
     		queryId = queryId.substring(queryNumIndex, queryNumIndex+4).trim();
-    		//System.out.println(queryId);
 
 			int narrLength = "Narrative:".length() + 1;
-			//System.out.println(narrative);
 			narrative = narrative.substring(narrLength, narrative.length());
-			//System.out.println(narrative);
-			//narrative = narrative.replace("\r","").replace("\n","");
 			
-			//Testing Editing the Narrative text to take out any clauses that specify what is not relevant
+			//Editing the Narrative text to take out any clauses that specify what is not relevant
 			String[] narrSentences = narrative.split("\\.");
 			
 			String newNarr = "";
@@ -219,12 +194,10 @@ public class CreateQuery {
 			for (String name : geoNames) {
 				if(title.contains(name))
 				{
-					//geoTitle += name+" ";
-					//geoCountriesString += name+" ";
+
 					if (!geoCountriesString.contains(name)) {
 						geoCountriesString += name+" ";
 					}
-					//System.out.println(geoTitle);
 				}
 				if(description.contains(name))
 				{
@@ -233,26 +206,18 @@ public class CreateQuery {
 					if (!geoCountriesString.contains(name)) {
 						geoCountriesString += name+" ";
 					}
-					//System.out.println(geoDescription);
 				}
 			}
 			
-			//String geoString = geoDescription+geoTitle;
-			//System.out.println(geoString);
-
-			
 			Query topicTitleQuery = multiqp.parse(MultiFieldQueryParser.escape(title));
 			Query topicDescriptionQuery = multiqp.parse(MultiFieldQueryParser.escape(description));
-			//Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(narrative));
 			Query topicNarrativeQuery = multiqp.parse(MultiFieldQueryParser.escape(newNarr));
 
-			
 			Query boostedTopicTitle = new BoostQuery(topicTitleQuery, topicTitleBoost);
 			Query boostedTopicDescription = new BoostQuery(topicDescriptionQuery, topicDescriptionBoost);
 			Query boostedTopicNarrative = new BoostQuery(topicNarrativeQuery, topicNarrativeBoost);
 			
 			BooleanQuery.Builder newBooleanQuery = new BooleanQuery.Builder();
-
 			
 			newBooleanQuery.add(boostedTopicTitle, BooleanClause.Occur.SHOULD);
 			newBooleanQuery.add(boostedTopicDescription, BooleanClause.Occur.SHOULD);
@@ -271,7 +236,6 @@ public class CreateQuery {
             //System.out.println(hits.length);
 
             for (int i = 0; i < hits.length; i++) {
-            	
             	int rank = i+1;
                 //append query results to results file
                 Document hitDoc = isearcher.doc(hits[i].doc);
