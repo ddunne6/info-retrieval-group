@@ -24,7 +24,7 @@ public class App {
 	
 	private static String runName = "";
 	//private static Similarity runSimilarity = new BM25Similarity(0.9f, 0.85f);
-	private static Similarity runSimilarity = new BM25Similarity();
+	private static Similarity runSimilarity = new BM25Similarity(0.6f,0.85f);
 	//private static Float customBoost = 5.35f;
 
 
