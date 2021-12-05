@@ -147,7 +147,7 @@ public class App {
 				
 				runName = "_config_2";
 				String boostType = "field";
-				Float contentBoost = 7f;
+				Float contentBoost = 3f;
 				Float titleBoost = 1f;
 				Float otherBoost = 1f;
 				
