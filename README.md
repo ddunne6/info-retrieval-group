@@ -1,6 +1,6 @@
 # smells-like-lucene-it
 
-Open *smells-like-lucene-it/*
+Open *cd Assignment_2/info-retrieval-group/smells-like-lucene-it/*
 
 ## Build
 This will have the effect of installing all prerequisite packages
@@ -21,6 +21,10 @@ This files represent results from the two application configurations that are di
 
 ## Trec Eval
 
-```trec_eval qrels-assignment2.part1 results/results_file_config_1```
+```cd```
 
-```trec_eval qrels-assignment2.part1 results/results_file_config_2```
+```cd trec_eval```
+
+```trec_eval "../Assignment_2/info-retrieval-group/qrels-assignment2.part1" "../Assignment_2/info-retrieval-group/results/results_file_config_1"```
+
+```trec_eval "../Assignment_2/info-retrieval-group/qrels-assignment2.part1" "../Assignment_2/info-retrieval-group/results/results_file_config_2```
